@@ -1,0 +1,110 @@
+    .login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    font-family: "Poppins", sans-serif;
+    }
+
+    .login-box {
+    display: flex;
+    width: 850px;
+    height: 520px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    }
+
+    .illustration {
+    flex: 1;
+    background-color: #eef3ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .login-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px;
+    text-align: center;
+    }
+
+    .login-form h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+    }
+
+    .subtitle {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 25px;
+    }
+
+    .login-form select,
+    .login-form input {
+    margin-bottom: 15px;
+    padding: 12px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
+    }
+
+    .login-form input:focus,
+    .login-form select:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+    outline: none;
+    }
+
+    .login-form button {
+    background: linear-gradient(45deg, #6c63ff, #48c6ef);
+    border: none;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    }
+
+    .login-form button:hover {
+    background: linear-gradient(45deg, #48c6ef, #6c63ff);
+    transform: scale(1.05);
+    }
+
+    .error {
+    color: red;
+    font-size: 14px;
+    }
+
+    .footer {
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 12px;
+    }
+
+    .footer a {
+    color: #6c63ff;
+    text-decoration: none;
+    }
+    .footer a:hover {
+    text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+    .login-box {
+        flex-direction: column;
+        width: 90%;
+        height: auto;
+    }
+    .illustration {
+        display: none;
+    }
+    }
