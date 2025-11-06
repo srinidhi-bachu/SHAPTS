@@ -1,38 +1,28 @@
-    import React from "react";
-    import { FaUserMd, FaCalendarCheck, FaChartPie, FaSignOutAlt } from "react-icons/fa";
+    import React, { useState } from "react";
+    import Navbar from "../components/Navbar/Navbar";
+    import Sidebar from "./sidenav/Sidebar";
+    import "./dashboardLayout.css";
 
     export default function DashboardLayout({ title, children }) {
-    const userName = localStorage.getItem("userName");
-    const role = localStorage.getItem("role");
-
-    const handleLogout = () => {
-        localStorage.clear();
-        window.location.href = "/";
-    };
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const userName = localStorage.getItem("userName") || "Guest";
+    const role = localStorage.getItem("role") || "Patient";
 
     return (
-        <div className="dashboard-container">
+        <div className={`dashboard-wrapper ${sidebarOpen ? "sidebar-open" : ""}`}>
+        {/* Top Navbar */}
+        <Navbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+
         {/* Sidebar */}
-        <aside className="sidebar">
-            <h2>SHAPTS</h2>
-            <ul>
-            <li><FaChartPie /> Overview</li>
-            <li><FaUserMd /> Profile</li>
-            <li><FaCalendarCheck /> Appointments</li>
-            <li onClick={handleLogout}><FaSignOutAlt /> Logout</li>
-            </ul>
-        </aside>
+        <Sidebar isOpen={sidebarOpen} />
 
-        {/* Main Dashboard Area */}
-        <main className="main-content">
-            <header className="topbar">
-            <h1>{title}</h1>
-            <p>
-                Welcome, <b>{userName}</b> ({role})
-            </p>
+        {/* Main content area */}
+        <main className="dashboard-main">
+            <header className="dashboard-header">
+            <h2>{title}</h2>
+            <p>Welcome back, <b>{userName}</b> 👋 ({role})</p>
             </header>
-
-            <section className="content">{children}</section>
+            <div className="dashboard-content">{children}</div>
         </main>
         </div>
     );

@@ -1,0 +1,41 @@
+    .sidebar-modern {
+    position: fixed;
+    left: -240px;
+    top: 65px;
+    width: 240px;
+    height: calc(100% - 65px);
+    background: white;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    border-top-right-radius: 16px;
+    transition: all 0.3s ease-in-out;
+    z-index: 99;
+    padding-top: 30px;
+    }
+
+    .sidebar-modern.open {
+    left: 0;
+    }
+
+    .sidebar-modern ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    }
+
+    .sidebar-modern li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 25px;
+    font-size: 15px;
+    color: #182848;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.3s;
+    }
+
+    .sidebar-modern li:hover {
+    background: linear-gradient(90deg, #e8ebf9, #f4f6ff);
+    border-left: 3px solid #4b6cb7;
+    color: #4b6cb7;
+    }
