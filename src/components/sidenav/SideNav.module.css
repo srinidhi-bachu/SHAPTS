@@ -1,5 +1,5 @@
 :root{--primary:#4e73df;--text:#0b2b4c;--muted:#6b7a90;--border:#e6ecf9;--bg:#fff}
-.wrap{position:fixed;top:64px;left:0;bottom:0;width:250px;background:var(--bg);border-right:1px solid var(--border);padding:12px 8px;display:flex;flex-direction:column;gap:8px;transition:transform .25s ease, box-shadow .25s ease;overflow:hidden;z-index:60;transform:translateX(-100%);box-shadow:none}
+.wrap{position:fixed;top:64px;left:0;bottom:0;width:250px;background:var(--bg);border-right:1px solid var(--border);padding:12px 8px;display:flex;flex-direction:column;gap:8px;transition:transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .35s cubic-bezier(.22,.61,.36,1);overflow:hidden;z-index:60;transform:translateX(-100%);box-shadow:none;will-change:transform}
 .open{transform:translateX(0);box-shadow:0 10px 24px rgba(13,42,76,.12)}
 .item{display:flex;align-items:center;gap:12px;border:0;background:#fff;color:var(--text);padding:10px 12px;border-radius:10px;cursor:pointer;box-shadow:0 3px 10px rgba(13,42,76,.05)}
 .icon{font-size:18px;color:var(--primary)}

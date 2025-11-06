@@ -1,8 +1,10 @@
     import React from "react";
+    import { useNavigate } from "react-router-dom";
     import { DotLottieReact } from "@lottiefiles/dotlottie-react";
     import styles from "./HeroBanner.module.css";
 
     export default function HeroBanner({ userName, setTab, onBookAppointments, onViewReports }) {
+    const navigate = useNavigate();
     return (
         <section className={styles.banner}>
         <div className={styles.content}>
@@ -14,10 +16,7 @@
             <div className={styles.actions}>
             <button
                 className={styles.primary}
-                onClick={() => {
-                if (onBookAppointments) onBookAppointments(setTab);
-                else if (setTab) setTab("appointments");
-                }}
+                onClick={() => navigate("/patient-dashboard/book")}
             >
                 🩺 Book Appointment
             </button>

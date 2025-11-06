@@ -1,4 +1,4 @@
-    import React from "react";
+    import React, { useEffect } from "react";
     import "./patientDashboard.css";
     import HeroBanner from "./heroBanner";
     import DashboardLayout from "../../components/dashboardLayout";
@@ -10,6 +10,12 @@
 
     export default function PatientDashboard() {
     const userName = localStorage.getItem("userName");
+    useEffect(() => {
+        const r = (localStorage.getItem("role") || "").toLowerCase();
+        if (r && r !== "patient") {
+        window.location.href = "/";
+        }
+    }, []);
 
     return (
         <DashboardLayout

@@ -2,10 +2,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgb(190, 190, 226);
+    background: rgb(176, 176, 210);
     border-radius: 20px;
     padding: 40px 60px;
-    color: white;
+    color: rgb(230, 187, 187);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     animation: fadeIn 1s ease-in-out;
     margin-bottom: 30px;

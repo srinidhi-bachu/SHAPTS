@@ -20,7 +20,7 @@ export default function HomeSection({ setTab }) {
               <p className={styles.cardTitle}>Book appointment</p>
               <p className={styles.cardSub}>Find slots with top doctors</p>
               <div className={styles.actions}>
-                <button className={styles.btnPrimary} onClick={() => setTab && setTab("appointments")}>Book now</button>
+                <button className={styles.btnPrimary} onClick={() => { window.location.href = "/patient-dashboard/book"; }}>Book now</button>
               </div>
             </div>
           </div>
@@ -31,7 +31,7 @@ export default function HomeSection({ setTab }) {
               <p className={styles.cardTitle}>Search doctor</p>
               <p className={styles.cardSub}>Filter by specialization and city</p>
               <div className={styles.actions}>
-                <button className={styles.btnGhost} onClick={() => setTab && setTab("doctors")}>Search</button>
+                <button className={styles.btnGhost} onClick={() => { window.location.href = "/patient-dashboard/book"; }}>Search</button>
               </div>
             </div>
           </div>
@@ -90,7 +90,7 @@ export default function HomeSection({ setTab }) {
               </div>
               <div className={styles.recActions}>
                 <button className={styles.btnGhost} onClick={() => setTab && setTab("doctors")}>View</button>
-                <button className={styles.btnPrimary} onClick={() => setTab && setTab("appointments")}>Book</button>
+                <button className={styles.btnPrimary} onClick={() => { window.location.href = "/patient-dashboard/book"; }}>Book</button>
               </div>
             </div>
           ))}
@@ -106,7 +106,7 @@ export default function HomeSection({ setTab }) {
               <p className={styles.cardTitle}>Dr. Rao • Dermatology</p>
               <p className={styles.cardSub}>12 Nov 2025 • 12:00 PM</p>
               <div className={styles.actions}>
-                <button className={styles.btnGhost} onClick={() => setTab && setTab("appointments")}>Manage</button>
+                <button className={styles.btnGhost} onClick={() => { window.location.href = "/patient-dashboard/book"; }}>Manage</button>
               </div>
             </div>
           </div>

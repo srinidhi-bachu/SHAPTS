@@ -5,6 +5,7 @@ import Register from "./pages/register.jsx";
 import AdminDashboard from "./dashboard/admin/adminDashboard.jsx";
 import DoctorDashboard from "./dashboard/doctor/doctorDashboard.jsx";
 import PatientDashboard from "./dashboard/patient/patientDashboard.jsx";
+import BookingPage from "./dashboard/patient/BookingPage.jsx";
 
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
         <Route path="/patient-dashboard" element={<PatientDashboard />} />
+        <Route path="/patient-dashboard/book" element={<BookingPage />} />
         <Route path="/register" element={<Register />} />
     </Routes>
 );
