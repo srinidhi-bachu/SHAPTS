@@ -1,0 +1,8 @@
+:root{--pt-primary:#2563eb;--pt-text:#0b2b4c;--pt-muted:#6b7a90;--pt-border:#e6ecf9}
+.pt-sidenav{position:fixed;top:64px;left:0;bottom:0;width:72px;background:#ffffff;border-right:1px solid var(--pt-border);padding:12px 8px;display:flex;flex-direction:column;gap:8px;transition:width .25s ease;overflow:hidden}
+.pt-sidenav.open{width:200px}
+.pt-sidenav-item{display:flex;align-items:center;gap:12px;border:0;background:#fff;color:var(--pt-text);padding:10px 12px;border-radius:10px;cursor:pointer;box-shadow:0 3px 10px rgba(13,42,76,.05)}
+.pt-sidenav-item .icon{font-size:18px;color:var(--pt-primary)}
+.pt-sidenav-item .label{white-space:nowrap}
+.pt-sidenav-item.active{background:linear-gradient(90deg,#eef5ff,#e2ecff);border:1px solid #cfe1ff}
+@media (max-width: 900px){.pt-sidenav{top:58px}}

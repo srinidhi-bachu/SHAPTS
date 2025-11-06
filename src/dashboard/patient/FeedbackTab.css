@@ -1,0 +1,7 @@
+.pt-fb-hero{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.pt-stars{display:flex;gap:6px;margin:8px 0}
+.star{font-size:22px;background:#fff;border:1px solid #e6ecf9;border-radius:8px;padding:6px 8px;color:#6b7a90}
+.star.on{color:#f59e0b;border-color:#fcd34d;background:#fff9e6}
+textarea{width:100%;min-height:90px;border:1px solid #e6ecf9;border-radius:10px;padding:10px}
+.pt-fb-actions{margin-top:8px}
+.pt-fb-actions button{border:0;background:#2563eb;color:#fff;padding:8px 12px;border-radius:8px}

@@ -1,0 +1,8 @@
+:root{--pt-surface:#f5f8ff;--pt-border:#e6ecf9}
+.pt-layout{min-height:100dvh;background:linear-gradient(180deg,#f9fbff 0%,#f2f7ff 100%)}
+.pt-main{padding:16px 16px 32px 88px;transition:padding-left .25s ease}
+.pt-main.shift{padding-left:216px}
+.pt-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
+.pt-tab{border:1px solid var(--pt-border);background:#fff;padding:8px 12px;border-radius:999px;cursor:pointer}
+.pt-tab.active{background:#eaf2ff;border-color:#cfe1ff}
+.pt-content{background:#fff;border:1px solid var(--pt-border);border-radius:16px;padding:16px;box-shadow:0 10px 24px rgba(13,42,76,.08)}

@@ -1,8 +1,6 @@
     import React, { useState } from "react";
     import { DotLottieReact } from "@lottiefiles/dotlottie-react";
     import "./login.css";
-    import { API_BASE_URL } from "../apiConfig";
-    import axios from "axios";
 
     export default function Login() {
     const [email, setEmail] = useState("");
@@ -10,39 +8,27 @@
     const [role, setRole] = useState("patient");
     const [error, setError] = useState("");
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
-
         if (!email || !password) {
         setError("Please fill all fields");
         return;
         }
 
-        try {
-        const response = await axios.post("http://localhost:5000/api/login", {
-            email,
-            password,
-            role,
-        });
+        // Dummy user profile based on role
+        const nameGuess = email.split("@")[0].replace(/\W+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || "User";
 
-        // Save data in localStorage
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.role);
-        localStorage.setItem("userName", response.data.name);
-
-        alert(response.data.message || `Login successful as ${response.data.role}`);
+        localStorage.setItem("token", "dummy-token");
+        localStorage.setItem("role", role);
+        localStorage.setItem("userName", nameGuess);
 
         // Redirect based on role
-        if (response.data.role === "doctor") {
-            window.location.href = "/doctor-dashboard";
-        } else if (response.data.role === "admin") {
-            window.location.href = "/admin-dashboard";
+        if (role === "doctor") {
+        window.location.href = "/doctor-dashboard";
+        } else if (role === "admin") {
+        window.location.href = "/admin-dashboard";
         } else {
-            window.location.href = "/patient-dashboard";
-        }
-        } catch (error) {
-        console.error("Login Error:", error);
-        setError(error.response?.data?.message || "Invalid credentials or server error");
+        window.location.href = "/patient-dashboard";
         }
     };
 

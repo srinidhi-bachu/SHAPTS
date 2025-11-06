@@ -1,29 +1,43 @@
     import React from "react";
     import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-    import "./heroBanner.css";
+    import styles from "./HeroBanner.module.css";
 
-    export default function HeroBanner({ userName }) {
+    export default function HeroBanner({ userName, setTab, onBookAppointments, onViewReports }) {
     return (
-        <section className="hero-banner">
-        <div className="hero-content">
+        <section className={styles.banner}>
+        <div className={styles.content}>
             <h2>
-            👋 Welcome, <span>{userName || "Patient"}</span>
+            <span className={styles.title}>Welcome to <span>SHAPTS</span> Health Portal</span>
             </h2>
-            <p>Your health, our priority — book appointments with trusted doctors anytime.</p>
+            <p className={styles.sub}>Your health, our priority — book appointments with trusted doctors anytime.</p>
 
-            <div className="hero-buttons">
-            <button className="primary-btn" onClick={() => navigate("/book-appointment")}>
+            <div className={styles.actions}>
+            <button
+                className={styles.primary}
+                onClick={() => {
+                if (onBookAppointments) onBookAppointments(setTab);
+                else if (setTab) setTab("appointments");
+                }}
+            >
                 🩺 Book Appointment
-</button>
+            </button>
 
-            <button className="secondary-btn">📋 View Reports</button>
+            <button
+                className={styles.secondary}
+                onClick={() => {
+                if (onViewReports) onViewReports(setTab);
+                else if (setTab) setTab("reports");
+                }}
+            >
+                📋 View Reports
+            </button>
             </div>
         </div>
 
         {/* Right side illustration */}
-        <div className="hero-illustration">
+        <div className={styles.illustration}>
             <DotLottieReact
-            src="/doctor.lottie"
+            src="/Doctor.lottie"
             autoplay
             loop
             style={{ width: "280px", height: "280px" }}

@@ -1,0 +1,7 @@
+.pt-doc-hero{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.pt-filters{display:flex;gap:8px;margin:8px 0 16px}
+.pt-filters input{flex:1;min-width:160px;border:1px solid #e6ecf9;border-radius:8px;padding:8px}
+.pt-doc-list{display:flex;flex-direction:column;gap:10px}
+.pt-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid #e6ecf9;border-radius:12px;background:#fff;box-shadow:0 6px 16px rgba(13,42,76,.06)}
+.book-btn{border:0;background:#10b981;color:#fff;padding:8px 12px;border-radius:8px}
+.muted{color:#6b7a90}

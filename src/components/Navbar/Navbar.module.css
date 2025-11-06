@@ -1,0 +1,14 @@
+:root{--bg:#fff;--text:#0b2b4c;--muted:#6b7a90;--primary:#4e73df;--border:#e6ecf9}
+.navbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px;padding:10px 16px;background:linear-gradient(90deg,#ffffff 0%,#f8faff 100%);border-bottom:1px solid var(--border);box-shadow:0 10px 20px rgba(78,115,223,.15)}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#93b0ff,#4e73df);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 6px 16px rgba(78,115,223,.35)}
+.title{display:flex;flex-direction:column}
+.title h2{margin:0;font-size:16px;color:var(--text)}
+.title small{color:var(--muted)}
+.spacer{flex:1}
+.role{font-size:12px;color:#0b3b8a;background:#e9f1ff;border:1px solid #cfe1ff;padding:4px 8px;border-radius:999px}
+.name{font-weight:600;color:var(--text)}
+.logout{border:0;background:#4e73df;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
+.menu{width:44px;height:36px;border:0;background:#fff;border-radius:10px;display:flex;flex-direction:column;justify-content:center;gap:4px;padding:6px;cursor:pointer}
+.menu span{display:block;height:2px;background:var(--text)}
+.right{display:flex;align-items:center;gap:12px}

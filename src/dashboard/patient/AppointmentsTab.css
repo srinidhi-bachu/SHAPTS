@@ -1,0 +1,7 @@
+.pt-app-hero{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.pt-app-actions{display:flex;gap:8px;margin:8px 0 16px}
+.pt-app-actions button{border:0;background:#2563eb;color:#fff;padding:8px 12px;border-radius:8px}
+.pt-app-list{display:flex;flex-direction:column;gap:10px}
+.pt-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid #e6ecf9;border-radius:12px;background:#fff;box-shadow:0 6px 16px rgba(13,42,76,.06)}
+.badge{background:#eaf2ff;border:1px solid #cfe1ff;color:#0b2b4c;padding:4px 8px;border-radius:999px}
+.muted{color:#6b7a90}

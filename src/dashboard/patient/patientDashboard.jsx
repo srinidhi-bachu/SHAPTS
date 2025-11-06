@@ -1,32 +1,30 @@
-    import React, { useState } from "react";
-    import Navbar from "../../components/Navbar/Navbar";
-    import Sidebar from "../../components/sidenav/sidenavbar";
+    import React from "react";
     import "./patientDashboard.css";
     import HeroBanner from "./heroBanner";
+    import DashboardLayout from "../../components/dashboardLayout";
+    import AppointmentsTab from "./AppointmentsTab";
+    import DoctorsTab from "./DoctorsTab";
+    import ReportsTab from "./ReportsTab";
+    import FeedbackTab from "./FeedbackTab";
+    import HomeSection from "./HomeSection";
 
     export default function PatientDashboard() {
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState("home");
+    const userName = localStorage.getItem("userName");
 
     return (
-        <div className="patient-dashboard">
-        <Navbar toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
-        <HeroBanner userName={localStorage.getItem("userName")} />
-
-
-        <Sidebar
-            isOpen={isSidebarOpen}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
+        <DashboardLayout
+        hero={<HeroBanner
+            userName={userName}
+            onBookAppointments={(setTab)=> setTab && setTab("appointments")}
+            onViewReports={(setTab)=> setTab && setTab("reports")}
+        />}
+        content={(tab, setTab) => {
+            if (tab === "appointments") return <AppointmentsTab />;
+            if (tab === "doctors") return <DoctorsTab />;
+            if (tab === "reports") return <ReportsTab />;
+            if (tab === "feedback") return <FeedbackTab />;
+            return <HomeSection setTab={setTab} />;
+        }}
         />
-
-        <div className={`dashboard-content ${isSidebarOpen ? "shifted" : ""}`}>
-            {activeTab === "home" && <h2>🏠 Welcome to SHAPTS Health Portal</h2>}
-            {activeTab === "appointments" && <h2>📅 Manage Appointments</h2>}
-            {activeTab === "doctors" && <h2>🩺 Find Doctors</h2>}
-            {activeTab === "reports" && <h2>📑 View Reports</h2>}
-            {activeTab === "feedback" && <h2>⭐ Give Feedback</h2>}
-        </div>
-        </div>
     );
     }

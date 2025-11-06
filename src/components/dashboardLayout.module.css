@@ -1,0 +1,8 @@
+:root{--surface:#f8faff;--border:#e6ecf9}
+.wrap{min-height:100dvh;background:linear-gradient(180deg,#f9fbff 0%,#f2f7ff 100%)}
+.main{padding:80px 16px 24px 16px;transition:padding-left .25s ease}
+.shift{padding-left:272px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
+.tab{border:1px solid var(--border);background:#fff;padding:8px 12px;border-radius:999px;cursor:pointer}
+.active{background:#eaf2ff;border-color:#cfe1ff}
+.content{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 10px 24px rgba(13,42,76,.08)}

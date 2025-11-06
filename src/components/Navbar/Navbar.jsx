@@ -1,28 +1,40 @@
     import React from "react";
-    import "./Navbar.css";
-    import { FaBars } from "react-icons/fa";
+    import styles from "./Navbar.module.css";
 
     export default function Navbar({ toggleSidebar }) {
-    const userName = localStorage.getItem("userName") || "Patient";
+    const name = localStorage.getItem("userName") || "Patient";
+    const role = (localStorage.getItem("role") || "patient").toUpperCase();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        localStorage.removeItem("userName");
+        window.location.href = "/";
+    };
 
     return (
-        <nav className="navbar">
-        <div className="nav-left">
-            <FaBars className="menu-icon" onClick={toggleSidebar} />
-            <h2>SHAPTS Health Portal</h2>
+        <header className={styles.navbar}>
+        <button className={styles.menu} onClick={toggleSidebar} aria-label="Toggle Menu">
+            <span />
+            <span />
+            <span />
+        </button>
+
+        <div className={styles.brand}>
+            <div className={styles.logo}>SH</div>
+            <div className={styles.title}>
+            <h2>SHAPTS</h2>
+            <small>Smart Health</small>
+            </div>
         </div>
-        <div className="nav-right">
-            <span>👋 Hi, {userName}</span>
-            <button
-            className="logout-btn"
-            onClick={() => {
-                localStorage.clear();
-                window.location.href = "/";
-            }}
-            >
-            Logout
-            </button>
+
+        <div className={styles.spacer} />
+
+        <div className={styles.right}>
+            <div className={styles.role}>{role}</div>
+            <div className={styles.name}>{name}</div>
+            <button className={styles.logout} onClick={handleLogout}>Logout</button>
         </div>
-        </nav>
+        </header>
     );
     }
