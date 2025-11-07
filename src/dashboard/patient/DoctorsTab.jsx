@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import "./DoctorsTab.css";
+import AnimatedSearch from "../../components/AnimatedSearch/AnimatedSearch";
 
 const DATA = {
   locations: [
@@ -61,6 +62,19 @@ export default function DoctorsTab() {
       </div>
 
       <div className="pt-filters">
+
+        <AnimatedSearch
+          value={filters.specialization}
+          onChange={(v)=>setFilters({...filters, specialization: v})}
+          placeholder="Specialization"
+          id="spec-search"
+        />
+        <AnimatedSearch
+          value={filters.location}
+          onChange={(v)=>setFilters({...filters, location: v})}
+          placeholder="Location"
+          id="loc-search"
+        />
         <select value={location} onChange={(e)=>{ setLocation(e.target.value); setHospital(""); }}>
           <option value="">Select Location</option>
           {locations.map(l => (<option key={l} value={l}>{l}</option>))}
@@ -74,6 +88,7 @@ export default function DoctorsTab() {
           <input id="dt-search" className="search-input" type="search" placeholder="Filter by specialization" pattern=".\S." required value={spec} onChange={(e)=>setSpec(e.target.value)} />
           <span className="caret" />
         </div>
+
       </div>
 
       {!location && (

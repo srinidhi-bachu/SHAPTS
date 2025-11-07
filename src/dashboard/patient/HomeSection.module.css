@@ -1,10 +1,10 @@
 .home{display:grid;grid-template-columns:1.5fr .5fr;gap:16px}
 @media (min-width: 1400px){.home{grid-template-columns:1.6fr .4fr}}
 @media (max-width: 1000px){.home{grid-template-columns:1fr}}
-.section{background:#fff;border:1px solid #e6ecf9;border-radius:16px;box-shadow:0 10px 24px rgba(13,42,76,.08);padding:16px;position:relative;overflow:hidden}
+.section{background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 10px 24px rgba(13,42,76,.08);padding:16px;position:relative;overflow:hidden}
 .hrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
 @media (max-width: 900px){.hrow{grid-template-columns:1fr}}
-.card{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #e6ecf9;border-radius:12px;background:#fff;transition:transform .25s ease, box-shadow .25s ease}
+.card{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;transition:transform .25s ease, box-shadow .25s ease}
 .card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(13,42,76,.12)}
 .cardTitle{font-weight:700;color:#0b2b4c;margin:0}
 .cardSub{color:#6b7a90;margin:2px 0 0 0}
@@ -13,14 +13,14 @@
 .btnGhost{border:1px solid #cfe1ff;background:#fff;color:#0b2b4c;padding:8px 12px;border-radius:10px;cursor:pointer}
 .tableWrap{margin-top:8px;overflow:auto}
 .table{width:100%;border-collapse:collapse}
-.table th,.table td{border-bottom:1px solid #eef2fb;padding:10px;text-align:left}
+.table th,.table td{border-bottom:1px solid #e5e7eb;padding:10px;text-align:left}
 .table tbody tr{transition:background .2s ease, transform .2s ease}
 .table tbody tr:hover{background:#f7faff;transform:translateY(-1px)}
-.badge{background:#eaf2ff;border:1px solid #cfe1ff;color:#0b2b4c;padding:4px 8px;border-radius:999px}
+.badge{background:#eef4ff;border:1px solid #d7e3ff;color:#0b2b4c;padding:4px 8px;border-radius:999px}
 .searchRow{display:flex;gap:8px;margin-top:8px}
-.searchRow input{flex:1;min-width:140px;border:1px solid #e6ecf9;border-radius:10px;padding:10px}
+.searchRow input{flex:1;min-width:140px;border:1px solid #e5e7eb;border-radius:10px;padding:10px;background:#fff}
 .list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.doctor{display:flex;justify-content:space-between;align-items:center;border:1px solid #e6ecf9;border-radius:10px;padding:10px}
+.doctor{display:flex;justify-content:space-between;align-items:center;border:1px solid #e5e7eb;border-radius:10px;padding:10px;background:#fff}
 .rightCol{display:flex;flex-direction:column;gap:16px}
 .title{margin:0 0 8px 0;color:#0b2b4c}
 .subtle{color:#6b7a90}

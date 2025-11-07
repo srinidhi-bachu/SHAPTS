@@ -1,0 +1,59 @@
+/* Scoped styles for DoctorProfile */
+.doctor-profile { padding: 28px; max-width: 1100px; margin: 0 auto; }
+
+.dp-hero { position: relative; height: 55vh; min-height: 420px; border-radius: 18px; overflow: hidden; background: linear-gradient(135deg,#eaf2ff,#f6f9ff) center/cover no-repeat; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 30px rgba(13,42,76,0.08); }
+.dp-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45)); }
+.dp-hero-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; color: #fff; padding: 16px; }
+.dp-hero-inner h1 { margin: 12px 0 4px; font-weight: 800; letter-spacing: -0.3px; }
+.dp-hero-inner .title { margin: 0; opacity: .95; }
+.dp-hero .avatar { border: 4px solid rgba(255,255,255,0.9); box-shadow: 0 12px 28px rgba(0,0,0,0.25); }
+.dp-hero .btn.primary { background: #0d6efd; }
+
+.profile-header { display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center; margin-bottom: 20px; background: linear-gradient(135deg,#f5f8ff,#eef4ff); border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px; box-shadow: 0 8px 24px rgba(13,42,76,0.06); }
+.avatar { width: 112px; height: 112px; border-radius: 50%; overflow: hidden; flex: 0 0 auto; border: 4px solid #fff; box-shadow: 0 10px 24px rgba(13,42,76,0.12); background: #dbe7ff; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-fallback { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 40px; color: #fff; background: linear-gradient(135deg,#6aa0ff,#1f4ad6); }
+
+.profile-meta h1 { margin: 0; font-size: 2rem; font-weight: 800; color: #0b2b4c; letter-spacing: -0.3px; }
+.profile-meta .sub { color: #6b7a90; margin-top: 6px; }
+.chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.chip { display: inline-block; font-size: 0.85rem; padding: 6px 12px; border-radius: 999px; background: #f1f6ff; border: 1px solid #d7e3ff; color: #0b2b4c; box-shadow: 0 2px 6px rgba(13,42,76,0.06); }
+
+.profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; }
+.profile-stack { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 18px; }
+.card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; box-shadow: 0 6px 16px rgba(13,42,76,0.06); transition: transform .15s ease, box-shadow .15s ease; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(13,42,76,0.10); }
+.card h2 { display: block; margin: 0 0 8px 0; font-size: 1.2rem; color: #0b2b4c; }
+.card p { display: block; margin: 8px 0 0 0; }
+.list { display: block; margin-top: 8px; padding-left: 18px; }
+.list li { display: list-item; list-style: disc; margin: 8px 0; }
+
+/* Services */
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.service-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; box-shadow: 0 6px 14px rgba(13,42,76,0.06); transition: transform .2s ease, box-shadow .2s ease; background: #fff; }
+.service-card h3 { margin: 0 0 8px 0; font-size: 1rem; color: #0b2b4c; }
+.service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 22px rgba(13,42,76,0.10); }
+
+/* Gallery */
+.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.gallery-item { overflow: hidden; border-radius: 12px; box-shadow: 0 6px 16px rgba(13,42,76,0.06); }
+.gallery-item img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform .3s ease; }
+.gallery-item:hover img { transform: scale(1.04); }
+
+.actions { margin-top: 20px; display: flex; gap: 10px; }
+.btn { border: 0; padding: 12px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+.btn.primary { background: #2563eb; color: #fff; box-shadow: 0 10px 22px rgba(37,99,235,0.18); }
+.btn.primary:hover { box-shadow: 0 14px 28px rgba(37,99,235,0.24); transform: translateY(-1px); }
+.btn.secondary { background: #fff; color: #0b2b4c; border: 1px solid #e5e7eb; text-decoration: none; }
+.btn.secondary:hover { background: #f8fafc; }
+
+@media (max-width: 900px) {
+  .doctor-profile { padding: 20px; }
+  .dp-hero { height: 46vh; min-height: 340px; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .profile-header { align-items: flex-start; padding: 16px; }
+  .avatar { width: 88px; height: 88px; }
+  .profile-meta h1 { font-size: 1.6rem; }
+  .services-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: 1fr; }
+}
