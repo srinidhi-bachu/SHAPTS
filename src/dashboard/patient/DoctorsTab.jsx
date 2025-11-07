@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import "./DoctorsTab.css";
+import AnimatedSearch from "../../components/AnimatedSearch/AnimatedSearch";
 
 const allDoctors = [
   { id: 1, name: "Dr. Priya Verma", specialization: "Cardiologist", location: "Mumbai" },
@@ -27,8 +28,18 @@ export default function DoctorsTab() {
       </div>
 
       <div className="pt-filters">
-        <input placeholder="Specialization" value={filters.specialization} onChange={(e)=>setFilters({...filters, specialization: e.target.value})} />
-        <input placeholder="Location" value={filters.location} onChange={(e)=>setFilters({...filters, location: e.target.value})} />
+        <AnimatedSearch
+          value={filters.specialization}
+          onChange={(v)=>setFilters({...filters, specialization: v})}
+          placeholder="Specialization"
+          id="spec-search"
+        />
+        <AnimatedSearch
+          value={filters.location}
+          onChange={(v)=>setFilters({...filters, location: v})}
+          placeholder="Location"
+          id="loc-search"
+        />
       </div>
 
       <div className="pt-doc-list">

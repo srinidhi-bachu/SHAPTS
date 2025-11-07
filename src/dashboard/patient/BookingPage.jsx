@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import "./BookingPage.css";
+import AnimatedSearch from "../../components/AnimatedSearch/AnimatedSearch";
+import AmbulanceButton from "../../components/AmbulanceButton/AmbulanceButton";
 
 export default function BookingPage() {
   const [location, setLocation] = useState("Mumbai");
@@ -36,14 +39,6 @@ export default function BookingPage() {
     ],
   }), []);
 
-  // Derived lists for filters (computed after doctorsByHospital is defined)
-  const allSpecs = useMemo(() => {
-    const s = new Set();
-    Object.values(doctorsByHospital).flat().forEach(d => s.add(d.spec));
-    return Array.from(s);
-  }, [doctorsByHospital]);
-  const allLangs = ["EN","HI","MR","KA","ML"];
-
   const doctorsByHospital = useMemo(() => ({
     mh1: [
       { id: "d11", name: "Dr. A. Mehta", spec: "Cardiologist", exp: 12, lang: ["EN", "HI"], fee: 800, rating: 4.7 },
@@ -72,6 +67,14 @@ export default function BookingPage() {
       { id: "d42", name: "Dr. T. Anand", spec: "Orthopedic", exp: 9, lang: ["EN", "HI"], fee: 700, rating: 4.4 },
     ],
   }), []);
+
+  // Derived lists for filters (computed after doctorsByHospital is defined)
+  const allSpecs = useMemo(() => {
+    const s = new Set();
+    Object.values(doctorsByHospital).flat().forEach(d => s.add(d.spec));
+    return Array.from(s);
+  }, [doctorsByHospital]);
+  const allLangs = ["EN","HI","MR","KA","ML"];
 
   const days = useMemo(() => {
     const arr = [];
@@ -159,6 +162,7 @@ export default function BookingPage() {
                   </div>
                   <div className="actions">
                     <span className="badge">⭐ {d.rating}</span>
+                    <Link to={`/doctor/${d.id}`} className="ghost" style={{ textDecoration: 'none' }}>View profile</Link>
                     <button className="primary" onClick={() => setDoctorModal({ doctor: d, hospitalId: selectedHospital })}>Book</button>
                   </div>
                 </div>
@@ -171,7 +175,7 @@ export default function BookingPage() {
           <div className="docs">
             <h3 className="h">Doctors at selected hospital</h3>
             <div className="filters">
-              <input type="text" placeholder="Search doctor or specialty" value={q} onChange={(e)=>setQ(e.target.value)} />
+              <AnimatedSearch value={q} onChange={setQ} placeholder="Search doctor or specialty" />
               <select value={spec} onChange={(e)=>setSpec(e.target.value)}>
                 <option value="">All specializations</option>
                 {allSpecs.map(s => <option key={s} value={s}>{s}</option>)}
@@ -222,6 +226,7 @@ export default function BookingPage() {
                     <div className="actions">
                       <span className="badge">⭐ {d.rating}</span>
                       <span className="badge">₹ {d.fee}</span>
+                      <Link to={`/doctor/${d.id}`} className="ghost" style={{ textDecoration: 'none' }}>View profile</Link>
                       <button className="primary" onClick={() => setDoctorModal({ doctor: d, hospitalId: selectedHospital })}>Book</button>
                     </div>
                   </div>
@@ -259,7 +264,17 @@ export default function BookingPage() {
 
             <div className="modalActions">
               <button className="ghost" onClick={() => { setDoctorModal(null); setSelectedSlot(''); }}>Cancel</button>
-              <button className="submit" onClick={() => { if(!selectedSlot) return alert('Pick a slot'); alert(`Booked ${doctorModal.doctor.name} on ${selectedSlot}`); setDoctorModal(null); setSelectedSlot(''); }}>Confirm booking</button>
+              <AmbulanceButton
+                label="Confirm booking"
+                successLabel="Booked"
+                canStart={() => !!selectedSlot}
+                onComplete={() => {
+                  if (!selectedSlot) return; // guard
+                  alert(`Booked ${doctorModal.doctor.name} on ${selectedSlot}`);
+                  setDoctorModal(null);
+                  setSelectedSlot('');
+                }}
+              />
             </div>
           </div>
         </div>

@@ -1,0 +1,144 @@
+.amb-button {
+  --color: #fff;
+  --background: #0b2b4c;
+  --tick: #16bf78;
+  --street: #96a3c7;
+  --street-fill: #69769c;
+  --ambody: #2563eb;
+  --ambody-dark: #1e40af;
+  --window: #2b3044;
+  --window-shadow: #404660;
+  --wheel: #2b3044;
+  --wheel-inner: #646b8c;
+  --wheel-dot: #fff;
+  --light: #fff8b1;
+  --box: #dcb97a;
+  --box-shadow: #b89b66;
+  position: relative;
+  padding: 12px 0;
+  width: 190px;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  outline: none;
+  color: var(--color);
+  background: var(--background);
+  border-radius: var(--br, 14px);
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) translateZ(0);
+  transition: transform 0.5s, border-radius 0.3s linear var(--br-d, 0s);
+}
+.amb-button:before, .amb-button:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 6px;
+  display: block;
+  background: var(--b, var(--street));
+  transform-origin: 0 100%;
+  transform: rotateX(90deg) scaleX(var(--sy, 1));
+}
+.amb-button:after { --sy: var(--progress, 0); --b: var(--street-fill); }
+
+.amb-button .default,
+.amb-button .success {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 24px;
+  opacity: var(--o, 1);
+  transition: opacity 0.3s;
+}
+.amb-button .success { --o: 0; position: absolute; left: 0; right: 0; top: 12px; }
+.amb-button .success svg {
+  width: 12px; height: 10px; display: inline-block; vertical-align: top; fill: none;
+  margin: 7px 0 0 8px; stroke: var(--tick); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 16px; stroke-dashoffset: var(--offset, 16px);
+  transition: stroke-dashoffset 0.4s ease 0.45s;
+}
+
+/* Ambulance */
+.amb-button .amb { position: absolute; width: 78px; height: 30px; transform: rotateX(90deg) translate3d(var(--amb-x, 6px), calc(var(--amb-y, -24) * 1px), 12px); }
+.amb-button .amb:before, .amb-button .amb:after {
+  content: ""; position: absolute; bottom: -6px; left: var(--l, 16px); width: 10px; height: 10px; border-radius: 50%; z-index: 2;
+  box-shadow: inset 0 0 0 2px var(--wheel), inset 0 0 0 4px var(--wheel-inner); background: var(--wheel-dot);
+}
+.amb-button .amb:after { --l: 56px; }
+.amb-button .amb .wheel { position: absolute; bottom: -6px; left: 6px; width: 10px; height: 10px; background: var(--wheel); border-radius: 50%; }
+.amb-button .amb .wheel.front { left: 40px; }
+.amb-button .amb .body { position: absolute; left: 8px; bottom: 0; width: 58px; height: 22px; background: linear-gradient(82deg, var(--ambody-dark) 0%, var(--ambody-dark) 12%, var(--ambody) 14%, var(--ambody) 100%); border-radius: 2px; }
+.amb-button .amb .body .window { position: absolute; width: 12px; height: 8px; background: linear-gradient(59deg, var(--window) 0%, var(--window) 57%, var(--window-shadow) 55%, var(--window-shadow) 100%); left: 36px; top: 4px; border-radius: 1px; }
+.amb-button .amb .body .light { position: absolute; width: 6px; height: 3px; right: -2px; top: 4px; background: var(--light); border-radius: 1px; }
+.amb-button .amb .body .cross { position: absolute; left: 10px; top: 4px; width: 8px; height: 8px; background: transparent; }
+.amb-button .amb .body .cross:before, .amb-button .amb .body .cross:after { content: ""; position: absolute; background: #fff; }
+.amb-button .amb .body .cross:before { width: 8px; height: 2px; left: 0; top: 3px; }
+.amb-button .amb .body .cross:after { width: 2px; height: 8px; left: 3px; top: 0; }
+.amb-button .amb .amb-box { position: absolute; width: 12px; height: 12px; right: 58px; bottom: 0; border-radius: 1px; overflow: hidden; transform: translate(calc(var(--box-x, -20) * 1px), calc(var(--box-y, -6) * 1px)) scale(var(--box-s, 0.5)); opacity: var(--box-o, 0); background: linear-gradient(68deg, var(--box) 0%, var(--box) 50%, var(--box-shadow) 50.2%, var(--box-shadow) 100%); background-size: 250% 100%; background-position-x: calc(var(--bx, 0) * 1%); }
+.amb-button .amb .amb-box:after { content: ""; position: absolute; width: 6px; left: 100%; top: 0; bottom: 0; background: var(--ambody); transform: translateX(calc(var(--hx, 0) * 1px)); }
+
+/* States */
+.amb-button.animating { --rx: -90deg; --br: 0; }
+.amb-button.animating .default { --o: 0; }
+.amb-button.done { --rx: 0deg; --br: 14px; --br-d: .2s; }
+.amb-button.done .success { --o: 1; --offset: 0; }
+
+/* Hide the miniature (in-button) ambulance while animating */
+.amb-button.animating .amb.inbtn { visibility: hidden; }
+
+/* Full-page overlay for the animation */
+.amb-overlay {
+  /* Ensure vars exist when rendered outside button scope */
+  --color: #fff;
+  --background: #0b2b4c;
+  --tick: #16bf78;
+  --street: #96a3c7;
+  --street-fill: #69769c;
+  --ambody: #2563eb;
+  --ambody-dark: #1e40af;
+  --window: #2b3044;
+  --window-shadow: #404660;
+  --wheel: #2b3044;
+  --wheel-inner: #646b8c;
+  --wheel-dot: #fff;
+  --light: #fff8b1;
+  --box: #dcb97a;
+  --box-shadow: #b89b66;
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  display: grid;
+  place-items: center;
+  padding-bottom: 0;
+  background: rgba(0,0,0,0);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.amb-overlay.show { opacity: 1; background: rgba(0,0,0,.25); }
+
+.amb-overlay .amb { position: relative; width: 160px; height: 60px; transform: translate3d(var(--amb-x, 0px), calc(var(--amb-y, 0) * 1px), 0); will-change: transform; }
+.amb-overlay .amb:before, .amb-overlay .amb:after { content: ""; position: absolute; bottom: -12px; left: var(--l, 28px); width: 18px; height: 18px; border-radius: 50%; z-index: 2; box-shadow: inset 0 0 0 2px var(--wheel), inset 0 0 0 4px var(--wheel-inner); background: var(--wheel-dot); }
+.amb-overlay .amb:after { --l: 110px; }
+.amb-overlay .amb .wheel { position: absolute; bottom: -12px; left: 16px; width: 18px; height: 18px; background: var(--wheel); border-radius: 50%; }
+.amb-overlay .amb .wheel.front { left: 88px; }
+.amb-overlay .amb .body { position: absolute; left: 14px; bottom: 0; width: 124px; height: 46px; background: linear-gradient(82deg, var(--ambody-dark) 0%, var(--ambody-dark) 12%, var(--ambody) 14%, var(--ambody) 100%); border-radius: 4px; }
+.amb-overlay .amb .body .window { position: absolute; width: 26px; height: 16px; background: linear-gradient(59deg, var(--window) 0%, var(--window) 57%, var(--window-shadow) 55%, var(--window-shadow) 100%); left: 82px; top: 8px; border-radius: 3px; }
+.amb-overlay .amb .body .light { position: absolute; width: 12px; height: 6px; right: -4px; top: 8px; background: var(--light); border-radius: 2px; box-shadow: 0 0 0 rgba(255,255,200,0); }
+.amb-overlay .amb .body .cross { position: absolute; left: 22px; top: 12px; width: 16px; height: 16px; }
+.amb-overlay .amb .body .cross:before, .amb-overlay .amb .body .cross:after { content: ""; position: absolute; background: #fff; }
+.amb-overlay .amb .body .cross:before { width: 16px; height: 3px; left: 0; top: 6.5px; }
+.amb-overlay .amb .body .cross:after { width: 3px; height: 16px; left: 6.5px; top: 0; }
+.amb-overlay .amb .amb-box { position: absolute; width: 24px; height: 24px; right: 120px; bottom: 0; border-radius: 3px; overflow: hidden; transform: translate(calc(var(--box-x, -24) * 1px), calc(var(--box-y, -6) * 1px)) scale(var(--box-s, 0.5)); opacity: var(--box-o, 0); background: linear-gradient(68deg, var(--box) 0%, var(--box) 50%, var(--box-shadow) 50.2%, var(--box-shadow) 100%); background-size: 250% 100%; background-position-x: calc(var(--bx, 0) * 1%); }
+.amb-overlay .amb .amb-box:after { content: ""; position: absolute; width: 12px; left: 100%; top: 0; bottom: 0; background: var(--ambody); transform: translateX(calc(var(--hx, 0) * 1px)); }
+
+/* Siren flash when overlay visible */
+@keyframes amb_siren {
+  0%, 100% { box-shadow: 0 0 0 rgba(255,0,0,0); filter: drop-shadow(0 0 0 rgba(255,0,0,0)); }
+  50% { box-shadow: 0 0 14px rgba(255,0,0,.6); filter: drop-shadow(0 0 10px rgba(255,0,0,.5)); }
+}
+.amb-overlay.show .amb .body .light { animation: amb_siren 0.6s linear infinite; }
