@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import AmbulanceButton from "../../components/AmbulanceButton.jsx";
 import "./BookingPage.css";
 
 export default function BookingPage() {
+  const nav = useNavigate();
   const [location, setLocation] = useState("Mumbai");
   const [selectedHospital, setSelectedHospital] = useState("");
   const [loadingHosp, setLoadingHosp] = useState(false);
@@ -36,14 +39,6 @@ export default function BookingPage() {
     ],
   }), []);
 
-  // Derived lists for filters (computed after doctorsByHospital is defined)
-  const allSpecs = useMemo(() => {
-    const s = new Set();
-    Object.values(doctorsByHospital).flat().forEach(d => s.add(d.spec));
-    return Array.from(s);
-  }, [doctorsByHospital]);
-  const allLangs = ["EN","HI","MR","KA","ML"];
-
   const doctorsByHospital = useMemo(() => ({
     mh1: [
       { id: "d11", name: "Dr. A. Mehta", spec: "Cardiologist", exp: 12, lang: ["EN", "HI"], fee: 800, rating: 4.7 },
@@ -72,6 +67,14 @@ export default function BookingPage() {
       { id: "d42", name: "Dr. T. Anand", spec: "Orthopedic", exp: 9, lang: ["EN", "HI"], fee: 700, rating: 4.4 },
     ],
   }), []);
+
+  // Derived filter sources (MUST be after doctorsByHospital)
+  const allSpecs = useMemo(() => {
+    const s = new Set();
+    Object.values(doctorsByHospital).forEach(list => list.forEach(d => s.add(d.spec)));
+    return Array.from(s);
+  }, [doctorsByHospital]);
+  const allLangs = ["EN", "HI", "MR", "KA", "ML"];
 
   const days = useMemo(() => {
     const arr = [];
@@ -117,6 +120,7 @@ export default function BookingPage() {
           <h2 style={{ margin: 0 }}>Book an appointment</h2>
           <p className="muted">Choose your location, pick a hospital and select a doctor & slot.</p>
         </div>
+        <div style={{ flex: 1 }} />
       </div>
 
       <div className="wrap">
@@ -147,19 +151,19 @@ export default function BookingPage() {
           <div>
             <h3 className="h">Recommended doctors</h3>
             <div className="list">
-              {[{ id:'r1', name:'Dr. Priya Verma', spec:'Cardiologist', rating:4.9 }, { id:'r2', name:'Dr. Arjun Rao', spec:'Dermatologist', rating:4.8 }].map(d => (
+              {[{ id:'d1', name:'Dr. Priya Verma', spec:'Cardiologist', rating:4.9 }, { id:'d3', name:'Dr. Arjun Rao', spec:'Dermatologist', rating:4.8 }].map(d => (
                 <div key={d.id} className="card">
                   <div className="docL">
                     <div className="avatar">{d.name.split(' ').slice(-1)[0][0]}</div>
                     <div>
-                      <strong>{d.name}</strong>
+                      <strong><button className="link" onClick={() => nav(`/patient-dashboard/doctor/${d.id}`)}>{d.name}</button></strong>
                       <div className="muted">{d.spec}</div>
                       <span className="avail">Available today</span>
                     </div>
                   </div>
                   <div className="actions">
                     <span className="badge">⭐ {d.rating}</span>
-                    <button className="primary" onClick={() => setDoctorModal({ doctor: d, hospitalId: selectedHospital })}>Book</button>
+                    <AmbulanceButton labelDefault="Book" labelSuccess="Booked" onComplete={() => setDoctorModal({ doctor: d, hospitalId: selectedHospital })} size="sm" />
                   </div>
                 </div>
               ))}
@@ -171,7 +175,11 @@ export default function BookingPage() {
           <div className="docs">
             <h3 className="h">Doctors at selected hospital</h3>
             <div className="filters">
-              <input type="text" placeholder="Search doctor or specialty" value={q} onChange={(e)=>setQ(e.target.value)} />
+              <div className="search-animated" style={{ maxWidth: 320 }}>
+                <label htmlFor="bp-search">Search</label>
+                <input id="bp-search" className="search-input" type="search" placeholder="Search doctor or specialty" pattern=".\S." required value={q} onChange={(e)=>setQ(e.target.value)} />
+                <span className="caret" />
+              </div>
               <select value={spec} onChange={(e)=>setSpec(e.target.value)}>
                 <option value="">All specializations</option>
                 {allSpecs.map(s => <option key={s} value={s}>{s}</option>)}
@@ -211,7 +219,7 @@ export default function BookingPage() {
                     <div className="docL">
                       <div className="avatar">{d.name.split(' ').slice(-1)[0][0]}</div>
                       <div>
-                        <strong>{d.name}</strong>
+                        <strong><button className="link" onClick={() => nav(`/patient-dashboard/doctor/${d.id}`)}>{d.name}</button></strong>
                         <div className="muted">{d.spec} • {d.exp} yrs exp</div>
                         <div className="muted">Languages: {d.lang.join(', ')}</div>
                         <div style={{ marginTop: 6 }}>
@@ -222,7 +230,7 @@ export default function BookingPage() {
                     <div className="actions">
                       <span className="badge">⭐ {d.rating}</span>
                       <span className="badge">₹ {d.fee}</span>
-                      <button className="primary" onClick={() => setDoctorModal({ doctor: d, hospitalId: selectedHospital })}>Book</button>
+                      <AmbulanceButton labelDefault="Book" labelSuccess="Booked" onComplete={() => setDoctorModal({ doctor: d, hospitalId: selectedHospital })} />
                     </div>
                   </div>
                 ))}

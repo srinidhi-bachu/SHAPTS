@@ -18,7 +18,7 @@ export default function SideNav({ isOpen, activeTab, onChange }) {
     window.location.href = "/";
   };
   return (
-    <aside className={`pt-sidenav ${isOpen ? "open" : ""}`}>
+    <aside id="pt-sidenav" className={`pt-sidenav ${isOpen ? "open" : ""}`}>
       {items.map((it) => (
         <button
           key={it.key}

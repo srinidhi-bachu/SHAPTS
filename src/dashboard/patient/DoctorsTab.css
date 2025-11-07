@@ -1,7 +1,14 @@
 .pt-doc-hero{display:flex;gap:12px;align-items:center;margin-bottom:8px}
 .pt-filters{display:flex;gap:8px;margin:8px 0 16px}
 .pt-filters input{flex:1;min-width:160px;border:1px solid #e6ecf9;border-radius:8px;padding:8px}
+.pt-filters select{border:1px solid #e6ecf9;border-radius:8px;padding:8px;min-width:180px}
 .pt-doc-list{display:flex;flex-direction:column;gap:10px}
 .pt-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid #e6ecf9;border-radius:12px;background:#fff;box-shadow:0 6px 16px rgba(13,42,76,.06)}
 .book-btn{border:0;background:#10b981;color:#fff;padding:8px 12px;border-radius:8px}
+.book-btn.secondary{background:#eaf2ff;color:#0b2b4c;border:1px solid #cfe1ff}
 .muted{color:#6b7a90}
+
+.pt-hosp-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:6px 0 12px}
+.pt-hosp-card{display:block;text-align:left;border:1px solid #e6ecf9;background:#fff;border-radius:12px;padding:12px;box-shadow:0 6px 16px rgba(13,42,76,.06);cursor:pointer}
+.pt-hosp-card .title{font-weight:700;margin-bottom:4px}
+.hint{color:#6b7a90;background:#f6f9ff;border:1px solid #e6ecf9;padding:10px;border-radius:10px}

@@ -18,6 +18,7 @@
             <button className={`${styles.tab} ${tab === "home" ? styles.active : ""}`} onClick={() => setTab("home")}>Home</button>
             <button className={`${styles.tab} ${tab === "appointments" ? styles.active : ""}`} onClick={() => setTab("appointments")}>Appointments</button>
             <button className={`${styles.tab} ${tab === "doctors" ? styles.active : ""}`} onClick={() => setTab("doctors")}>Search Doctor</button>
+            <button className={`${styles.tab} ${tab === "prescriptions" ? styles.active : ""}`} onClick={() => setTab("prescriptions")}>Prescriptions</button>
             <button className={`${styles.tab} ${tab === "reports" ? styles.active : ""}`} onClick={() => setTab("reports")}>Reports</button>
             <button className={`${styles.tab} ${tab === "feedback" ? styles.active : ""}`} onClick={() => setTab("feedback")}>Feedback</button>
             </div>

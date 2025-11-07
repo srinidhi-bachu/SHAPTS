@@ -1,0 +1,33 @@
+:root{--bg:linear-gradient(180deg,#f9fbff 0%,#f2f7ff 100%);--surface:#ffffff;--surface-2:#f6f9ff;--text:#0b2b4c;--muted:#6b7a90;--primary:#2563eb;--primary-600:#1d4ed8;--accent:#a78bfa;--border:#e6ecf9;--shadow-1:0 6px 16px rgba(13,42,76,.08);--shadow-2:0 10px 24px rgba(13,42,76,.10);--radius-8:8px;--radius-10:10px;--radius-12:12px;--radius-14:14px;--radius-16:16px;--pad-8:8px;--pad-10:10px;--pad-12:12px;--pad-16:16px}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;line-height:1.35;color:var(--text);background:var(--bg)}
+
+/* Links & buttons */
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font:inherit}
+
+/* Utilities */
+.u-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-16);box-shadow:var(--shadow-2)}
+.u-glass{background:rgba(255,255,255,0.85);backdrop-filter:saturate(1.2) blur(8px);-webkit-backdrop-filter:saturate(1.2) blur(8px);border:1px solid var(--border)}
+.u-btn{border:1px solid #cfe1ff;background:#eaf2ff;color:var(--text);padding:10px 14px;border-radius:var(--radius-12);cursor:pointer;transition:transform .16s ease, box-shadow .2s ease}
+.u-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-2)}
+.u-btn.primary{background:var(--primary);border-color:var(--primary-600);color:#fff}
+.u-badge{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:var(--surface-2)}
+
+/* Animations */
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+@keyframes slideUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.fade-in{animation:fadeIn .28s ease both}
+.slide-up{animation:slideUp .32s ease both}
+.float-y{animation:floatY 4s ease-in-out infinite}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .fade-in,.slide-up,.float-y{animation:none}
+  .u-btn{transition:none}
+}
