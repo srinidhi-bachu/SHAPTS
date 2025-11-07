@@ -12,6 +12,9 @@ export default function BookingPage() {
   const [loadingDocs, setLoadingDocs] = useState(false);
   const [doctorModal, setDoctorModal] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState("");
+  const [patientNote, setPatientNote] = useState("");
+  const noteRef = useRef(null);
+
   const topRef = useRef(null);
   const [q, setQ] = useState("");
   const [spec, setSpec] = useState("");
@@ -39,6 +42,7 @@ export default function BookingPage() {
     ],
   }), []);
 
+  // Doctors database by hospital (declare BEFORE suggestions that reference it)
   const doctorsByHospital = useMemo(() => ({
     mh1: [
       { id: "d11", name: "Dr. A. Mehta", spec: "Cardiologist", exp: 12, lang: ["EN", "HI"], fee: 800, rating: 4.7 },
@@ -67,6 +71,38 @@ export default function BookingPage() {
       { id: "d42", name: "Dr. T. Anand", spec: "Orthopedic", exp: 9, lang: ["EN", "HI"], fee: 700, rating: 4.4 },
     ],
   }), []);
+
+  // Heuristic: Map free-text note to a likely specialization
+  const mapNoteToSpec = (t) => {
+    const s = (t || "").toLowerCase();
+    if (/heart|chest pain|chest discomfort|bp|cardiac/.test(s)) return "Cardiologist";
+    if (/skin|rash|acne|eczema|derma/.test(s)) return "Dermatologist";
+    if (/bone|joint|knee|fracture|back pain|shoulder/.test(s)) return "Orthopedic";
+    if (/child|kid|pediatric|fever in child/.test(s)) return "Pediatrician";
+    if (/(ear|nose|throat|sinus|tonsil)/.test(s)) return "ENT";
+    if (/headache|migraine|seizure|epilepsy|stroke|neuro/.test(s)) return "Neurologist";
+    if (/cough|cold|fever|general|weakness|fatigue/.test(s)) return "General Physician";
+    return "";
+  };
+
+  // Flatten doctors for quick suggestion search
+  const allDoctorsList = useMemo(() => Object.values(doctorsByHospital).flat(), [doctorsByHospital]);
+
+  const suggestedSpec = useMemo(() => mapNoteToSpec(patientNote), [patientNote]);
+
+  const suggestedDoctors = useMemo(() => {
+    if (!suggestedSpec) return [];
+    // Prefer current city hospitals first if chosen, else show top rating few
+    const list = allDoctorsList.filter(d => d.spec === suggestedSpec);
+    return list.sort((a,b)=> b.rating - a.rating).slice(0,4);
+  }, [suggestedSpec, allDoctorsList]);
+
+  const suggestedHospitals = useMemo(() => {
+    // In the selected location, list hospitals (no server data about departments, so just show top 2)
+    return (hospitalsByCity[location] || []).slice(0,2);
+  }, [location, hospitalsByCity]);
+
+  
 
   // Derived lists for filters (computed after doctorsByHospital is defined)
   const allSpecs = useMemo(() => {
@@ -147,6 +183,18 @@ export default function BookingPage() {
             </div>
           </div>
 
+          <div style={{ marginTop: 12 }}>
+            <label className="muted" htmlFor="bk-note">Describe your problem</label>
+            <textarea
+              id="bk-note"
+              ref={noteRef}
+              value={patientNote}
+              onChange={(e)=>setPatientNote(e.target.value)}
+              placeholder="e.g. Chest discomfort since morning"
+              style={{ width:'100%', minHeight: 80, marginTop: 6, padding: 10, borderRadius: 10, border: '1px solid #cbd5e1' }}
+            />
+          </div>
+
           <div>
             <h3 className="h">Recommended doctors</h3>
             <div className="list">
@@ -163,13 +211,84 @@ export default function BookingPage() {
                   <div className="actions">
                     <span className="badge">⭐ {d.rating}</span>
                     <Link to={`/doctor/${d.id}`} className="ghost" style={{ textDecoration: 'none' }}>View profile</Link>
-                    <button className="primary" onClick={() => setDoctorModal({ doctor: d, hospitalId: selectedHospital })}>Book</button>
+                    <button
+                      className="primary"
+                      onClick={() => {
+                        if (!patientNote.trim()) {
+                          alert("Please describe your problem before booking.");
+                          try { noteRef.current?.focus(); noteRef.current?.scrollIntoView({ behavior:'smooth', block:'center' }); } catch {}
+                          return;
+                        }
+                        setDoctorModal({ doctor: d, hospitalId: selectedHospital });
+                      }}
+                    >
+                      Book
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+
+        {/* Suggestions based on the described problem */}
+        {patientNote.trim() && (
+          <div className="list" style={{ gridColumn: '1 / -1' }}>
+            <div className="card">
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:12 }}>
+                <div>
+                  <strong>Suggestions based on your problem</strong>
+                  <div className="muted">{suggestedSpec ? `Suggested specialization: ${suggestedSpec}` : 'Tell us more to refine suggestions'}</div>
+                </div>
+                {suggestedSpec && (
+                  <span className="badge">Specialization: {suggestedSpec}</span>
+                )}
+              </div>
+
+              {suggestedSpec && (
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginTop:12 }}>
+                  <div>
+                    <div className="muted" style={{ marginBottom:6 }}>Suggested doctors</div>
+                    {(suggestedDoctors.length ? suggestedDoctors : [{id:'s1',name:`Top ${suggestedSpec}`,spec:suggestedSpec,rating:4.5}]).map(d => (
+                      <div key={d.id} className="doc" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 0', borderBottom:'1px solid #eef2f7' }}>
+                        <div className="docL" style={{ display:'flex', gap:10, alignItems:'center' }}>
+                          <div className="avatar">{(d.name||'Dr').split(' ').slice(-1)[0][0]}</div>
+                          <div>
+                            <strong>{d.name}</strong>
+                            <div className="muted">{d.spec}</div>
+                          </div>
+                        </div>
+                        <div className="actions" style={{ display:'flex', gap:8, alignItems:'center' }}>
+                          {d.rating && <span className="badge">⭐ {d.rating}</span>}
+                          <Link to={`/doctor/${d.id}`} className="ghost" style={{ textDecoration:'none' }}>View</Link>
+                          <button
+                            className="primary"
+                            onClick={() => {
+                              if (!patientNote.trim()) { try{ noteRef.current?.focus(); }catch{}; return; }
+                              setDoctorModal({ doctor: d, hospitalId: selectedHospital });
+                            }}
+                          >Book</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <div className="muted" style={{ marginBottom:6 }}>Hospitals in {location}</div>
+                    {suggestedHospitals.map(h => (
+                      <button key={h.id} className="card" onClick={() => setSelectedHospital(h.id)}>
+                        <div>
+                          <strong>{h.name}</strong>
+                          <div className="muted">{h.address}</div>
+                        </div>
+                        <span className="badge">⭐ {h.rating}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {selectedHospital && (
           <div className="docs">
@@ -227,7 +346,19 @@ export default function BookingPage() {
                       <span className="badge">⭐ {d.rating}</span>
                       <span className="badge">₹ {d.fee}</span>
                       <Link to={`/doctor/${d.id}`} className="ghost" style={{ textDecoration: 'none' }}>View profile</Link>
-                      <button className="primary" onClick={() => setDoctorModal({ doctor: d, hospitalId: selectedHospital })}>Book</button>
+                      <button
+                        className="primary"
+                        onClick={() => {
+                          if (!patientNote.trim()) {
+                            alert("Please describe your problem before booking.");
+                            try { noteRef.current?.focus(); noteRef.current?.scrollIntoView({ behavior:'smooth', block:'center' }); } catch {}
+                            return;
+                          }
+                          setDoctorModal({ doctor: d, hospitalId: selectedHospital });
+                        }}
+                      >
+                        Book
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -270,9 +401,22 @@ export default function BookingPage() {
                 canStart={() => !!selectedSlot}
                 onComplete={() => {
                   if (!selectedSlot) return; // guard
+                  try {
+                    const [date, time] = selectedSlot.split(" ");
+                    const payload = {
+                      id: Date.now(),
+                      doctor: doctorModal.doctor.name,
+                      date,
+                      time,
+                      status: "Booked",
+                      note: patientNote || "",
+                    };
+                    localStorage.setItem("pt:lastBooking", JSON.stringify(payload));
+                  } catch {}
                   alert(`Booked ${doctorModal.doctor.name} on ${selectedSlot}`);
                   setDoctorModal(null);
                   setSelectedSlot('');
+                  setPatientNote('');
                 }}
               />
             </div>

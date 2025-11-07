@@ -264,6 +264,26 @@
 .timelinePatient { opacity: .9; }
 .timelineControls { display: flex; align-items: center; }
 
+.muted { color: var(--muted); font-size: 12px; }
+
+.quickBar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+
+/* Mini chart */
+.chart { width: 100%; height: 90px; display: block; }
+.sparkline { width: 100%; height: 40px; display: block; }
+
+/* Chat widget */
+.chatCard { background: var(--glass); border: 1px solid var(--stroke); border-radius: 12px; padding: 12px; box-shadow: var(--shadow); }
+.chatBody { max-height: 180px; overflow: auto; display: grid; gap: 8px; margin-bottom: 8px; }
+.chatMsg { background: rgba(110,231,249,0.14); border: 1px solid rgba(110,231,249,0.35); border-radius: 10px; padding: 8px 10px; }
+.chatInput { display: flex; gap: 8px; }
+.chatInput input { flex: 1; }
+
+/* Modal */
+.modalBackdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 50; }
+.modalCard { background: #fff; color: var(--text); width: min(560px, 92vw); border-radius: 14px; border: 1px solid var(--stroke); box-shadow: var(--shadow); padding: 14px; }
+.modalHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+
 .input, .select, .textarea {
   width: 100%;
   background: #ffffff; /* solid for clarity */

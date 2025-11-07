@@ -71,6 +71,10 @@ export default function DoctorDashboard() {
     nextVisit: { date: "", time: "" },
   }));
 
+  // AI Rx assistant UI state (mock)
+  const [rxAssistOpen, setRxAssistOpen] = useState(false);
+  const [rxSuggestions, setRxSuggestions] = useState([]);
+
   // Auto-save on change
   useEffect(() => { save("doc:profile", profile); }, [profile]);
   useEffect(() => { save("doc:slots", slots); }, [slots]);
@@ -86,6 +90,42 @@ export default function DoctorDashboard() {
       localStorage.setItem("doctor_profile", JSON.stringify(profile));
       alert("Profile saved");
     } catch {}
+  };
+
+  // AI Rx assistant (mock suggestions based on reason keywords)
+  const openRxAssistant = () => {
+    const reason = (consultation.reason || "").toLowerCase();
+    const pool = [];
+    if (/chest|bp|cardiac|pressure/.test(reason)) {
+      pool.push(
+        { medicine: "Atorvastatin 10mg", dosage: "1 tab", duration: "30 days", notes: "Night" },
+        { medicine: "Aspirin 75mg", dosage: "1 tab", duration: "30 days", notes: "After breakfast" }
+      );
+    }
+    if (/cough|cold|fever/.test(reason)) {
+      pool.push(
+        { medicine: "Paracetamol 500mg", dosage: "1 tab", duration: "5 days", notes: "SOS fever" },
+        { medicine: "Levocetirizine 5mg", dosage: "1 tab", duration: "5 days", notes: "Night" }
+      );
+    }
+    if (/skin|rash|acne|eczema/.test(reason)) {
+      pool.push(
+        { medicine: "Clindamycin Gel", dosage: "Topical", duration: "14 days", notes: "Night" },
+        { medicine: "Doxycycline 100mg", dosage: "1 cap", duration: "7 days", notes: "After food" }
+      );
+    }
+    const uniq = [];
+    const seen = new Set();
+    pool.forEach((s) => { const k = `${s.medicine}|${s.dosage}`; if (!seen.has(k)) { seen.add(k); uniq.push(s); } });
+    setRxSuggestions(uniq.length ? uniq : [{ medicine: "ORS", dosage: "200ml", duration: "2 days", notes: "Hydration" }]);
+    setRxAssistOpen(true);
+  };
+
+  const addSuggestionToRx = (s) => {
+    setPrescriptionRows((r) => [
+      ...r,
+      { id: (r[r.length - 1]?.id || 0) + 1, medicine: s.medicine, dosage: s.dosage, duration: s.duration, notes: s.notes },
+    ]);
   };
 
   // Queue tracker state (session-only)
@@ -104,6 +144,45 @@ export default function DoctorDashboard() {
       return next;
     });
   };
+
+  // Widgets data
+  const todaysAppointments = useMemo(() => {
+    return appointments.filter((a) => a.date === todayStr);
+  }, [appointments]);
+  const nextAppt = useMemo(() => {
+    const sorted = todaysAppointments.slice().sort((x, y) => x.time.localeCompare(y.time));
+    return sorted[0] || null;
+  }, [todaysAppointments]);
+  const pendingFollowUps = useMemo(() => {
+    return history.filter((h) => !h.feedback || h.feedback === "").length;
+  }, [history]);
+
+  // Weekly consultations data (last 7 days) from appointments
+  const weeklySeries = useMemo(() => {
+    const today = new Date();
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      const count = appointments.filter((a) => a.date === key).length;
+      days.push({ key, label: d.toLocaleDateString(undefined, { weekday: 'short' }), value: count });
+    }
+    return days;
+  }, [appointments]);
+
+  const weeklyPolyline = useMemo(() => {
+    const w = 260, h = 60, pad = 6;
+    const max = Math.max(1, ...weeklySeries.map((p) => p.value));
+    if (!weeklySeries.length) return "";
+    const stepX = (w - pad * 2) / (weeklySeries.length - 1 || 1);
+    const points = weeklySeries.map((p, i) => {
+      const x = pad + i * stepX;
+      const y = h - pad - (p.value / max) * (h - pad * 2);
+      return `${x},${y}`;
+    }).join(' ');
+    return { w, h, pad, points, max };
+  }, [weeklySeries]);
 
   const addSlot = () => setSlots((s) => [...s, { day: "", start: "09:00", end: "10:00" }]);
   const updateSlot = (i, k, v) => setSlots((s) => s.map((row, idx) => (idx === i ? { ...row, [k]: v } : row)));
@@ -309,6 +388,43 @@ export default function DoctorDashboard() {
 
             {active === "appointments" && (
               <div>
+                {/* Widgets row */}
+                <div className={styles.cards} style={{ marginBottom: 8 }}>
+                  <div className={styles.card}>
+                    <div className={styles.cardTitle}>Today’s Appointments</div>
+                    <div className={styles.cardValue}>{todaysAppointments.length}</div>
+                    <div className={styles.muted}>
+                      {nextAppt ? `Next: ${nextAppt.patient || 'Patient'} at ${nextAppt.time}` : 'No upcoming today'}
+                    </div>
+                  </div>
+                  <div className={styles.card}>
+                    <div className={styles.cardTitle}>Pending Follow-ups</div>
+                    <div className={styles.cardValue}>{pendingFollowUps}</div>
+                    <div className={styles.muted}>Patients awaiting follow-up notes</div>
+                  </div>
+                  <div className={styles.card}>
+                    <div className={styles.cardTitle}>Virtual Consultation</div>
+                    <button className={styles.btn} onClick={() => alert('Starting virtual appointment (stub)')}>Start</button>
+                  </div>
+                  <div className={styles.card}>
+                    <div className={styles.cardTitle}>Weekly Consultations</div>
+                    <svg className={styles.chart} viewBox={`0 0 ${weeklyPolyline.w} ${weeklyPolyline.h}`} aria-label="weekly consultations">
+                      <polyline fill="none" stroke="#2563eb" strokeWidth="2" points={weeklyPolyline.points} />
+                      {weeklySeries.map((p, i) => (
+                        <circle key={i} cx={6 + i * ((weeklyPolyline.w - 12) / (weeklySeries.length - 1 || 1))} cy={weeklyPolyline.h - 6 - (p.value / Math.max(1, weeklyPolyline.max)) * (weeklyPolyline.h - 12)} r="2" fill="#2563eb" />
+                      ))}
+                    </svg>
+                    <div className={styles.muted}>{weeklySeries.map(d => d.label).join(' · ')}</div>
+                  </div>
+                </div>
+
+                {/* Quick Access */}
+                <div className={styles.quickBar}>
+                  <button className={styles.btn} onClick={() => alert('Translate (stub)')}>Translate</button>
+                  <button className={styles.btn} onClick={() => setReferral({ ...referral, to: referral.to || '' })}>Refer</button>
+                  <button className={styles.btn} onClick={() => alert('Call patient (stub)')}>Call</button>
+                  <button className={styles.btn} onClick={() => alert('Notify patient (stub)')}>Notify</button>
+                </div>
                 {(() => {
                   const conf = findAppointmentConflicts(appointments);
                   if (!conf.length) return null;
