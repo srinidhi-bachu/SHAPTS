@@ -5,6 +5,7 @@
     import AppointmentsTab from "./AppointmentsTab";
     import DoctorsTab from "./DoctorsTab";
     import ReportsTab from "./ReportsTab";
+    import PrescriptionsTab from "./PrescriptionsTab";
     import FeedbackTab from "./FeedbackTab";
     import HomeSection from "./HomeSection";
 
@@ -28,6 +29,7 @@
             if (tab === "appointments") return <AppointmentsTab />;
             if (tab === "doctors") return <DoctorsTab />;
             if (tab === "reports") return <ReportsTab />;
+            if (tab === "prescriptions") return <PrescriptionsTab />;
             if (tab === "feedback") return <FeedbackTab />;
             return <HomeSection setTab={setTab} />;
         }}

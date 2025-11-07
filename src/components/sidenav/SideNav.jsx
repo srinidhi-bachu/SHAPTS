@@ -1,11 +1,12 @@
 import React from "react";
-import { FaCalendarAlt, FaUserMd, FaFileMedical, FaStar, FaHome, FaSignOutAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaUserMd, FaFileMedical, FaStar, FaHome, FaSignOutAlt, FaFilePrescription } from "react-icons/fa";
 import styles from "./SideNav.module.css";
 
 const items = [
   { key: "home", label: "Home", icon: <FaHome /> },
   { key: "appointments", label: "Appointments", icon: <FaCalendarAlt /> },
   { key: "doctors", label: "Search Doctor", icon: <FaUserMd /> },
+  { key: "prescriptions", label: "Prescriptions", icon: <FaFilePrescription /> },
   { key: "reports", label: "Reports", icon: <FaFileMedical /> },
   { key: "feedback", label: "Feedback", icon: <FaStar /> },
 ];

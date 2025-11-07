@@ -1,6 +1,11 @@
 /* Base */
 .pt-app-hero{display:flex;gap:12px;align-items:center;margin-bottom:12px}
 .pt-hero-card{border:1px solid rgba(207,225,255,.7);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(247,250,255,.65));backdrop-filter:blur(12px);padding:12px;box-shadow:0 14px 28px rgba(13,42,76,.1)}
+.pt-hero-card{position:relative;overflow:hidden}
+.pt-hero-card::before,.pt-hero-card::after{content:"";position:absolute;border-radius:50%;filter:blur(24px);opacity:.45;animation:float 8s ease-in-out infinite}
+.pt-hero-card::before{width:220px;height:220px;background:radial-gradient(closest-side,rgba(99,102,241,.35),transparent 70%);top:-40px;right:-30px}
+.pt-hero-card::after{width:160px;height:160px;background:radial-gradient(closest-side,rgba(59,130,246,.35),transparent 70%);bottom:-30px;left:-20px;animation-delay:1.2s}
+@keyframes float{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-12px) translateX(8px)}}
 .stats{display:flex;gap:10px;margin-top:8px}
 .stat{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(207,225,255,.8);background:#fff;border-radius:999px;padding:6px 10px}
 .stat.alt{background:#ecfdf5;border-color:#d1fae5;color:#065f46}

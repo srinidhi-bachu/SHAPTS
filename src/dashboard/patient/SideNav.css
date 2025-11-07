@@ -1,8 +1,13 @@
-:root{--pt-primary:#2563eb;--pt-text:#0b2b4c;--pt-muted:#6b7a90;--pt-border:#e6ecf9}
-.pt-sidenav{position:fixed;top:64px;left:0;bottom:0;width:72px;background:#ffffff;border-right:1px solid var(--pt-border);padding:12px 8px;display:flex;flex-direction:column;gap:8px;transition:width .25s ease;overflow:hidden}
+:root{--pt-primary:#2563eb;--pt-text:#0b2b4c;--pt-muted:#6b7a90;--pt-border:#e6ecf9;--pt-glass:rgba(255,255,255,0.7)}
+.pt-sidenav{position:fixed;top:64px;left:0;bottom:0;width:72px;background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);border-right:1px solid var(--pt-border);padding:12px 8px;display:flex;flex-direction:column;gap:10px;transition:width .28s ease, background .2s ease, box-shadow .2s ease;overflow:hidden;backdrop-filter:saturate(1.2) blur(8px);-webkit-backdrop-filter:saturate(1.2) blur(8px);box-shadow:0 12px 28px rgba(13,42,76,.06)}
 .pt-sidenav.open{width:200px}
-.pt-sidenav-item{display:flex;align-items:center;gap:12px;border:0;background:#fff;color:var(--pt-text);padding:10px 12px;border-radius:10px;cursor:pointer;box-shadow:0 3px 10px rgba(13,42,76,.05)}
+.pt-sidenav-item{display:flex;align-items:center;gap:12px;border:0;background:#fff;color:var(--pt-text);padding:10px 12px;border-radius:12px;cursor:pointer;box-shadow:0 4px 12px rgba(13,42,76,.06);border:1px solid transparent;transition:transform .18s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease}
 .pt-sidenav-item .icon{font-size:18px;color:var(--pt-primary)}
 .pt-sidenav-item .label{white-space:nowrap}
-.pt-sidenav-item.active{background:linear-gradient(90deg,#eef5ff,#e2ecff);border:1px solid #cfe1ff}
+.pt-sidenav:not(.open) .label{display:none}
+.pt-sidenav:not(.open) .pt-sidenav-item{justify-content:center}
+.pt-sidenav:not(.open) .pt-sidenav-item .icon{margin-right:0}
+.pt-sidenav-item:hover{transform:translateX(2px);box-shadow:0 8px 18px rgba(13,42,76,.12);background:linear-gradient(90deg,#ffffff,#f6faff)}
+.pt-sidenav-item.active{background:linear-gradient(90deg,#eef5ff,#e2ecff);border:1px solid #cfe1ff;box-shadow:0 10px 22px rgba(37,99,235,.12);position:relative}
+.pt-sidenav-item.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--pt-primary);border-radius:999px}
 @media (max-width: 900px){.pt-sidenav{top:58px}}

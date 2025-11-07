@@ -210,6 +210,7 @@
 
 .tabContent { animation: fadeSlideLeft 260ms ease-out; }
 
+
 .formGrid { display: grid; grid-template-columns: repeat(12,1fr); gap: 12px; align-items: start; }
 .formGrid > * { min-width: 0; }
 
@@ -288,10 +289,19 @@
   width: 100%;
   background: #ffffff; /* solid for clarity */
   border: 1px solid #cbd5e1; /* slate-300 for visibility */
+
+.formGrid { display: grid; grid-template-columns: repeat(12,1fr); gap: 12px; }
+
+.input, .select, .textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--stroke);
+
   color: var(--text);
   border-radius: 12px;
   padding: 10px 12px;
   outline: none;
+
   box-sizing: border-box;
 }
 
@@ -302,6 +312,7 @@
 .input:focus, .select:focus, .textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+
 }
 
 .textarea { min-height: 90px; resize: vertical; }
@@ -362,10 +373,12 @@
   .col6 { grid-column: span 12; }
   .col4 { grid-column: span 12; }
   .col3 { grid-column: span 6; }
+
   .queueBody { grid-template-columns: 1fr; }
 }
 
 /* Narrow screens: prevent overlap by stacking all fields */
 @media (max-width: 640px) {
   .col6, .col4, .col3, .col2, .col12 { grid-column: span 12; }
+
 }

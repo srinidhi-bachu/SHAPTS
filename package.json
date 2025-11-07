@@ -16,12 +16,21 @@
     "@fullcalendar/timegrid": "^6.1.19",
     "@lottiefiles/dotlottie-react": "^0.17.6",
     "axios": "^1.13.2",
+
     "chart.js": "^4.5.1",
     "date-fns": "^4.1.0",
     "gsap": "^3.13.0",
     "html5-qrcode": "^2.3.8",
     "jspdf": "^3.0.3",
     "qrcode": "^1.5.4",
+
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.3",
+
     "react": "^19.1.1",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.1.1",

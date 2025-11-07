@@ -1,7 +1,7 @@
 import React from "react";
 import "./TopNav.css";
 
-export default function TopNav({ onToggleSidebar }) {
+export default function TopNav({ open = false, onToggleSidebar }) {
   const name = localStorage.getItem("userName") || "Patient";
   const role = (localStorage.getItem("role") || "patient").toUpperCase();
 
@@ -14,7 +14,7 @@ export default function TopNav({ onToggleSidebar }) {
 
   return (
     <header className="pt-topnav">
-      <button className="pt-burger" onClick={onToggleSidebar} aria-label="Toggle Menu">
+      <button className={`pt-burger ${open ? "open" : ""}`} onClick={onToggleSidebar} aria-label="Toggle Menu" aria-expanded={open} aria-controls="pt-sidenav">
         <span />
         <span />
         <span />

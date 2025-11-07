@@ -9,7 +9,7 @@ export default function DashboardLayout({ hero, content }) {
 
   return (
     <div className="pt-layout">
-      <TopNav onToggleSidebar={() => setOpen((v) => !v)} />
+      <TopNav open={open} onToggleSidebar={() => setOpen((v) => !v)} />
       <SideNav isOpen={open} activeTab={tab} onChange={setTab} />
 
       <main className={`pt-main ${open ? "shift" : ""}`}>
