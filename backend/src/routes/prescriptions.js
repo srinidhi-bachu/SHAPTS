@@ -1,19 +1,42 @@
 const express = require("express");
-const router = express.Router();
 const Prescription = require("../models/Prescription");
+const router = express.Router();
 
-// ✅ Test route to confirm
-router.get("/", (req, res) => {
-  res.send("Prescriptions route is working ✅");
-});
-
-// ✅ Create prescription
+// ✅ Create a prescription
 router.post("/create", async (req, res) => {
   try {
-    const p = await Prescription.create(req.body);
-    res.status(201).json({ message: "Prescription created", prescription: p });
+    const { doctorId, patientId, medicines, notes } = req.body;
+
+    if (!doctorId || !patientId || !medicines || medicines.length === 0) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
+
+    const newPrescription = new Prescription({
+      doctorId,
+      patientId,
+      medicines,
+      notes,
+    });
+
+    await newPrescription.save();
+    res
+      .status(201)
+      .json({ message: "Prescription created successfully", prescription: newPrescription });
   } catch (err) {
-    res.status(500).json({ message: "Create failed", error: err.message });
+    console.error("❌ Prescription Error:", err);
+    res.status(500).json({ message: "Error creating prescription" });
+  }
+});
+
+// ✅ Get all prescriptions for a doctor
+router.get("/doctor/:doctorId", async (req, res) => {
+  try {
+    const prescriptions = await Prescription.find({ doctorId: req.params.doctorId })
+      .populate("patientId", "name email")
+      .populate("doctorId", "name");
+    res.status(200).json(prescriptions);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching prescriptions" });
   }
 });
 

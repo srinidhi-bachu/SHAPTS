@@ -1,5 +1,10 @@
 
+import React, { useMemo, useState, useEffect } from "react";
+import axios from "axios";
+
+
     import React, { useEffect, useMemo, useState } from "react";
+
 import {
   FiUser,
   FiClock,
@@ -12,6 +17,15 @@ import {
   FiSearch,
 } from "react-icons/fi";
 import styles from "./DoctorDashboard.module.css";
+
+
+export default function DoctorDashboard() {
+  const storedName =
+    typeof window !== "undefined" ? localStorage.getItem("userName") : null;
+  const name = storedName || "John Doe";
+  const role =
+    typeof window !== "undefined" ? localStorage.getItem("role") : "Doctor";
+
 import { save, load } from "../../services/storage";
 import { findSlotConflicts } from "../../services/validators";
 import { generatePrescriptionPDF } from "../../services/pdf";
@@ -20,6 +34,7 @@ export default function DoctorDashboard() {
   const storedName = typeof window !== "undefined" ? localStorage.getItem("userName") : null;
   const name = storedName || "John Doe";
   const role = typeof window !== "undefined" ? localStorage.getItem("role") : "Doctor";
+
 
   const TABS = useMemo(
     () => [
@@ -37,6 +52,64 @@ export default function DoctorDashboard() {
   const [active, setActive] = useState("profile");
 
   // Local state stores
+
+  const [profile, setProfile] = useState({
+    fullName: name ? `Dr. ${name}` : "Dr. John Doe",
+    specialization: "Cardiologist",
+    bio: "Experienced physician focused on patient-centered care.",
+  });
+
+  const [slots, setSlots] = useState([
+    { day: "Mon", start: "10:00", end: "13:00" },
+    { day: "Wed", start: "15:00", end: "18:00" },
+  ]);
+
+  // ✅ Appointments fetched dynamically
+  const [appointments, setAppointments] = useState([]);
+
+  useEffect(() => {
+    const doctorId = localStorage.getItem("doctorId") || localStorage.getItem("userId");
+    if (!doctorId) return;
+
+    axios
+      .get(`http://localhost:5000/api/appointments/doctor/${doctorId}`)
+      .then((res) => {
+        setAppointments(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching doctor appointments:", err);
+      });
+  }, []);
+
+  
+
+  const [uploads, setUploads] = useState([]); // {id, name, type}
+  const [referral, setReferral] = useState({ to: "", notes: "" });
+
+  // ✅ Prescriptions state (was missing and caused blank screen)
+  const [prescriptionRows, setPrescriptionRows] = useState([
+    { id: 1, medicine: "", dosage: "", duration: "", notes: "" },
+  ]);
+
+  const [history, setHistory] = useState([
+    {
+      id: 1,
+      patient: "M. Rao",
+      date: "2025-10-30",
+      summary: "Routine checkup",
+      feedback: "Helpful and clear",
+    },
+    {
+      id: 2,
+      patient: "J. Patel",
+      date: "2025-10-22",
+      summary: "Follow-up",
+      feedback: "Great experience",
+    },
+  ]);
+
+  const [consultation, setConsultation] = useState({
+
   const [profile, setProfile] = useState(() => load("doc:profile", {
     fullName: name ? `Dr. ${name}` : "Dr. John Doe",
     specialization: "Cardiologist",
@@ -66,10 +139,14 @@ export default function DoctorDashboard() {
   ]));
 
   const [consultation, setConsultation] = useState(() => load("doc:consult", {
+
     currentPatient: "A. Kumar",
     reason: "Chest discomfort",
     notes: "",
     nextVisit: { date: "", time: "" },
+
+  });
+
   }));
 
   // AI Rx assistant UI state (mock)
@@ -86,12 +163,21 @@ export default function DoctorDashboard() {
   useEffect(() => { save("doc:history", history); }, [history]);
   useEffect(() => { save("doc:consult", consultation); }, [consultation]);
 
+
   const saveProfile = () => {
     try {
       localStorage.setItem("doctor_profile", JSON.stringify(profile));
       alert("Profile saved");
     } catch {}
   };
+
+
+  const addSlot = () =>
+    setSlots((s) => [...s, { day: "", start: "09:00", end: "10:00" }]);
+  const updateSlot = (i, k, v) =>
+    setSlots((s) => s.map((row, idx) => (idx === i ? { ...row, [k]: v } : row)));
+  const removeSlot = (i) =>
+    setSlots((s) => s.filter((_, idx) => idx !== i));
 
   // AI Rx assistant (mock suggestions based on reason keywords)
   const openRxAssistant = () => {
@@ -189,9 +275,57 @@ export default function DoctorDashboard() {
   const updateSlot = (i, k, v) => setSlots((s) => s.map((row, idx) => (idx === i ? { ...row, [k]: v } : row)));
   const removeSlot = (i) => setSlots((s) => s.filter((_, idx) => idx !== i));
 
+
   const addRxRow = () =>
     setPrescriptionRows((r) => [
       ...r,
+
+      {
+        id: (r[r.length - 1]?.id || 0) + 1,
+        medicine: "",
+        dosage: "",
+        duration: "",
+        notes: "",
+      },
+    ]);
+  const updateRxRow = (id, k, v) =>
+    setPrescriptionRows((r) =>
+      r.map((row) => (row.id === id ? { ...row, [k]: v } : row))
+    );
+  const removeRxRow = (id) =>
+    setPrescriptionRows((r) => r.filter((row) => row.id !== id));
+  const savePrescription = async () => {
+  const doctorId = localStorage.getItem("doctorId");
+  const patientId = prompt("Enter Patient ID for this prescription:");
+
+  if (!doctorId || !patientId) {
+    alert("Missing doctor or patient ID!");
+    return;
+  }
+
+  try {
+    const medicines = prescriptionRows.map((row) => ({
+      name: row.medicine,
+      dosage: row.dosage,
+      duration: row.duration,
+      notes: row.notes,
+    }));
+
+    const response = await axios.post("http://localhost:5000/api/prescriptions/create", {
+      doctorId,
+      patientId,
+      medicines,
+      notes: "General notes",
+    });
+
+    alert("✅ Prescription saved successfully!");
+    console.log("Prescription Response:", response.data);
+  } catch (err) {
+    console.error("Prescription save error:", err);
+    alert("❌ Failed to save prescription");
+  }
+};
+
       { id: (r[r.length - 1]?.id || 0) + 1, medicine: "", dosage: "", duration: "", notes: "" },
     ]);
   const updateRxRow = (id, k, v) => setPrescriptionRows((r) => r.map((row) => (row.id === id ? { ...row, [k]: v } : row)));
@@ -248,12 +382,21 @@ export default function DoctorDashboard() {
     }
   };
 
+
   const onUpload = (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
     setUploads((u) => [
       ...u,
+
+      ...files.map((f, idx) => ({
+        id: u.length + idx + 1,
+        name: f.name,
+        type: f.type || "file",
+      })),
+
       ...files.map((f, idx) => ({ id: u.length + idx + 1, name: f.name, type: f.type || "file" })),
+
     ]);
   };
 
@@ -261,7 +404,17 @@ export default function DoctorDashboard() {
 
   const completeConsultation = () => {
     setHistory((h) => [
+
+      {
+        id: (h[0]?.id || 0) + 1,
+        patient: consultation.currentPatient,
+        date: new Date().toISOString().slice(0, 10),
+        summary: consultation.reason,
+        feedback: "-",
+      },
+
       { id: (h[0]?.id || 0) + 1, patient: consultation.currentPatient, date: new Date().toISOString().slice(0, 10), summary: consultation.reason, feedback: "-" },
+
       ...h,
     ]);
     alert("Consultation marked complete");
@@ -284,11 +437,23 @@ export default function DoctorDashboard() {
         {TABS.map((t) => (
           <button
             key={t.id}
+
+            className={`${styles.navButton} ${
+              active === t.id ? styles.navButtonActive : ""
+            }`}
+            onClick={() => setActive(t.id)}
+            aria-pressed={active === t.id}
+          >
+            <span style={{ display: "grid", placeItems: "center", width: 20 }}>
+              {t.icon}
+            </span>
+
             className={`${styles.navButton} ${active === t.id ? styles.navButtonActive : ""}`}
             onClick={() => setActive(t.id)}
             aria-pressed={active === t.id}
           >
             <span style={{ display: "grid", placeItems: "center", width: 20 }}>{t.icon}</span>
+
             <span>{t.label}</span>
           </button>
         ))}
@@ -327,7 +492,13 @@ export default function DoctorDashboard() {
           </div>
           <div className={styles.card}>
             <div className={styles.cardTitle}>Pending Prescriptions</div>
+
+            <div className={styles.cardValue}>
+              {Math.max(0, prescriptionRows.length - 1)}
+            </div>
+
             <div className={styles.cardValue}>{Math.max(0, prescriptionRows.length - 1)}</div>
+
           </div>
           <div className={styles.card}>
             <div className={styles.cardTitle}>New Uploads</div>
@@ -342,10 +513,23 @@ export default function DoctorDashboard() {
               {TABS.map((t) => (
                 <button
                   key={t.id}
+
+                  className={`${styles.tabBtn} ${
+                    active === t.id ? styles.tabBtnActive : ""
+                  }`}
+                  onClick={() => setActive(t.id)}
+                >
+                  <span
+                    style={{ verticalAlign: "middle", marginRight: 6 }}
+                  >
+                    {t.icon}
+                  </span>
+
                   className={`${styles.tabBtn} ${active === t.id ? styles.tabBtnActive : ""}`}
                   onClick={() => setActive(t.id)}
                 >
                   <span style={{ verticalAlign: "middle", marginRight: 6 }}>{t.icon}</span>
+
                   {t.label}
                 </button>
               ))}
@@ -353,6 +537,9 @@ export default function DoctorDashboard() {
           </div>
 
           <div className={styles.tabContent}>
+
+            {/* Profile */}
+
             {active === "profile" && (
               <div className={styles.formGrid}>
                 <div className={styles.col6}>
@@ -360,11 +547,19 @@ export default function DoctorDashboard() {
                   <input
                     className={styles.input}
                     value={profile.fullName}
+
+                    onChange={(e) =>
+                      setProfile({ ...profile, fullName: e.target.value })
+                    }
+                  />
+                </div>
+                <div className={styles.col6}>
+
                     onChange={(e) => setProfile({ ...profile, fullName: e.target.value })}
                   />
                 </div>
                 <div className={styles.col6}>
-=======
+
  import React, { useMemo, useState } from "react";
  import {
    FiUser,
@@ -572,13 +767,31 @@ export default function DoctorDashboard() {
                  </div>
                  <div className={styles.col6}>
 
+
                   <label>Specialization</label>
                   <input
                     className={styles.input}
                     value={profile.specialization}
-                    onChange={(e) => setProfile({ ...profile, specialization: e.target.value })}
+                    onChange={(e) =>
+                      setProfile({
+                        ...profile,
+                        specialization: e.target.value,
+                      })
+                    }
                   />
                 </div>
+                <div className={styles.col12}>
+                  <label>Bio</label>
+                  <textarea
+                    className={`${styles.input} ${styles.textarea}`}
+                    value={profile.bio}
+                    onChange={(e) =>
+                      setProfile({ ...profile, bio: e.target.value })
+                    }
+                  />
+                </div>
+
+
 
                 <div className={styles.col12}>
                   <label>Bio</label>
@@ -588,10 +801,327 @@ export default function DoctorDashboard() {
                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                   />
                 </div>
+
                 <div className={styles.col12}>
                   <button className={styles.btn} onClick={saveProfile}>
                     <FiCheckCircle /> Save Profile
                   </button>
+
+                </div>
+              </div>
+            )}
+
+            {/* Appointments Tab (✅ Real-time from backend) */}
+            {active === "appointments" && (
+              <div>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Patient</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {appointments.length > 0 ? (
+                      appointments.map((a) => (
+                        <tr key={a._id}>
+                          <td>{a.patientId?.name || "Unknown"}</td>
+                          <td>{a.date}</td>
+                          <td>{a.time}</td>
+                          <td>
+                            <span
+                              className={`${styles.badge} ${
+                                a.status === "Confirmed"
+                                  ? styles.success
+                                  : styles.warn
+                              }`}
+                            >
+                              {a.status || "Pending"}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4">No appointments found</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+{/* Availability Tab */}
+{active === "availability" && (
+  <div>
+    <div className={styles.formGrid}>
+      {slots.map((s, i) => (
+        <React.Fragment key={`${s.day}-${i}`}>
+          <div className={styles.col3}>
+            <label>Day</label>
+            <select
+              className={styles.select}
+              value={s.day}
+              onChange={(e) => updateSlot(i, "day", e.target.value)}
+            >
+              {"Sun Mon Tue Wed Thu Fri Sat"
+                .split(" ")
+                .map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className={styles.col3}>
+            <label>Start</label>
+            <input
+              type="time"
+              className={styles.input}
+              value={s.start}
+              onChange={(e) => updateSlot(i, "start", e.target.value)}
+            />
+          </div>
+          <div className={styles.col3}>
+            <label>End</label>
+            <input
+              type="time"
+              className={styles.input}
+              value={s.end}
+              onChange={(e) => updateSlot(i, "end", e.target.value)}
+            />
+          </div>
+          <div
+            className={styles.col3}
+            style={{ display: "flex", alignItems: "end" }}
+          >
+            <button
+              className={`${styles.btn} ${styles.danger}`}
+              onClick={() => removeSlot(i)}
+            >
+              Remove
+            </button>
+          </div>
+        </React.Fragment>
+      ))}
+      <div className={styles.col12}>
+        <button className={styles.btn} onClick={addSlot}>
+          Add Slot
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* Prescriptions Tab */}
+{active === "prescriptions" && (
+  <div className={styles.formGrid}>
+    {prescriptionRows.map((row) => (
+      <React.Fragment key={row.id}>
+        <div className={styles.col4}>
+          <label>Medicine</label>
+          <input
+            className={styles.input}
+            value={row.medicine}
+            onChange={(e) =>
+              updateRxRow(row.id, "medicine", e.target.value)
+            }
+          />
+        </div>
+        <div className={styles.col3}>
+          <label>Dosage</label>
+          <input
+            className={styles.input}
+            value={row.dosage}
+            onChange={(e) =>
+              updateRxRow(row.id, "dosage", e.target.value)
+            }
+          />
+        </div>
+        <div className={styles.col3}>
+          <label>Duration</label>
+          <input
+            className={styles.input}
+            value={row.duration}
+            onChange={(e) =>
+              updateRxRow(row.id, "duration", e.target.value)
+            }
+          />
+        </div>
+        <div className={styles.col12}>
+          <label>Notes</label>
+          <input
+            className={styles.input}
+            value={row.notes}
+            onChange={(e) =>
+              updateRxRow(row.id, "notes", e.target.value)
+            }
+          />
+        </div>
+      </React.Fragment>
+    ))}
+    <div className={styles.col12} style={{ display: "flex", gap: 8 }}>
+      <button className={styles.btn} onClick={addRxRow}>
+        Add Row
+      </button>
+      <button
+        className={`${styles.btn} ${styles.success}`}
+        onClick={savePrescription}
+      
+        <FiCheckCircle /> Save Prescription
+      </button>
+    </div>
+  </div>
+)}
+
+{/* Uploads/Referrals Tab */}
+{active === "uploads" && (
+  <div>
+    <div className={styles.formGrid}>
+      <div className={styles.col6}>
+        <label>Upload Reports</label>
+        <input
+          className={styles.input}
+          type="file"
+          multiple
+          onChange={onUpload}
+        />
+      </div>
+      <div className={styles.col6}>
+        <label>Refer to Specialist</label>
+        <select
+          className={styles.select}
+          value={referral.to}
+          onChange={(e) =>
+            setReferral({ ...referral, to: e.target.value })
+          }
+        
+          <option value="">Select</option>
+          <option value="Cardiologist">Cardiologist</option>
+          <option value="Neurologist">Neurologist</option>
+          <option value="Orthopedic">Orthopedic</option>
+        </select>
+      </div>
+      <div className={styles.col12}>
+        <label>Referral Notes</label>
+        <textarea
+          className={`${styles.input} ${styles.textarea}`}
+          value={referral.notes}
+          onChange={(e) =>
+            setReferral({ ...referral, notes: e.target.value })
+          }
+        />
+      </div>
+      <div className={styles.col12}>
+        <button className={styles.btn} onClick={saveReferral}>
+          Save Referral
+        </button>
+      </div>
+    </div>
+    <div className={styles.separator} />
+    <table className={styles.table}>
+      <thead>
+        <tr>
+          <th>File Name</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {uploads.map((u) => (
+          <tr key={u.id}>
+            <td>{u.name}</td>
+            <td>{u.type}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
+{/* Consultation Tab */}
+{active === "consultation" && (
+  <div className={styles.formGrid}>
+    <div className={styles.col6}>
+      <label>Current Patient</label>
+      <input
+        className={styles.input}
+        value={consultation.currentPatient}
+        onChange={(e) =>
+          setConsultation({ ...consultation, currentPatient: e.target.value })
+        }
+      />
+    </div>
+    <div className={styles.col6}>
+      <label>Reason</label>
+      <input
+        className={styles.input}
+        value={consultation.reason}
+        onChange={(e) =>
+          setConsultation({ ...consultation, reason: e.target.value })
+        }
+      />
+    </div>
+    <div className={styles.col12}>
+      <label>Consultation Notes</label>
+      <textarea
+        className={`${styles.input} ${styles.textarea}`}
+        value={consultation.notes}
+        onChange={(e) =>
+          setConsultation({ ...consultation, notes: e.target.value })
+        }
+      />
+    </div>
+    <div className={styles.col3}>
+      <label>Next Visit - Date</label>
+      <input
+        type="date"
+        className={styles.input}
+        value={consultation.nextVisit.date}
+        onChange={(e) =>
+          setConsultation({
+            ...consultation,
+            nextVisit: { ...consultation.nextVisit, date: e.target.value },
+          })
+        }
+      />
+    </div>
+    <div className={styles.col3}>
+      <label>Next Visit - Time</label>
+      <input
+        type="time"
+        className={styles.input}
+        value={consultation.nextVisit.time}
+        onChange={(e) =>
+          setConsultation({
+            ...consultation,
+            nextVisit: { ...consultation.nextVisit, time: e.target.value },
+          })
+        }
+      />
+    </div>
+    <div className={styles.col12} style={{ display: "flex", gap: 8 }}>
+      <button
+        className={`${styles.btn} ${styles.success}`}
+        onClick={completeConsultation}
+      >
+        Mark Complete
+      </button>
+      <button className={styles.btn} onClick={scheduleNext}>
+        Schedule Next Visit
+      </button>
+    </div>
+  </div>
+)}
+
+            {/* The rest of your existing tabs (availability, prescriptions, uploads, etc.) remain unchanged */}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
                 </div>
               </div>
             )}
@@ -691,7 +1221,7 @@ export default function DoctorDashboard() {
                                     className={styles.select}
                                     value={a.status}
                                     onChange={(e) => updateAppointment(a.id, 'status', e.target.value)}
-                                  >
+                                  
                                     <option>Pending</option>
                                     <option>Confirmed</option>
                                     <option>Completed</option>
@@ -740,7 +1270,7 @@ export default function DoctorDashboard() {
                           className={styles.select}
                           value={a.status}
                           onChange={(e) => updateAppointment(a.id, "status", e.target.value)}
-                        >
+                        
                           <option>Pending</option>
                           <option>Confirmed</option>
                           <option>Completed</option>
@@ -1236,3 +1766,4 @@ export default function DoctorDashboard() {
      </div>
    );
  }
+

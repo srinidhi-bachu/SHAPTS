@@ -7,9 +7,9 @@ import "./BookingPage.css";
 
 const doctorsByHospital = {
   Hyderabad: [
-    { name: "Dr. Rajesh Kumar", specialization: "Cardiologist", hospital: "Apollo Hospital" },
-    { name: "Dr. Sneha Reddy", specialization: "Dermatologist", hospital: "Yashoda Hospital" },
-    { name: "Dr. Arjun Mehta", specialization: "Orthopedic", hospital: "AIG Hospital" },
+    { id: "sathwik1", backendId: "690cc78c9b3a288bba4c3b56", name: "Dr. Sathwik", specialization: "General Physician", hospital: "Apollo Hospital" },
+    { id: "d1", name: "Dr. Priya Verma", specialization: "Cardiologist", hospital: "Yashoda Hospital" },
+    { id: "d3", name: "Dr. Arjun Rao", specialization: "Dermatologist", hospital: "AIG Hospital" },
   ],
   Bangalore: [
     { name: "Dr. Priya Singh", specialization: "Pediatrician", hospital: "Fortis Hospital" },
@@ -29,6 +29,7 @@ const allSpecs = [
   "Neurologist",
   "Gynecologist",
   "ENT Specialist",
+  "General Physician",
 ];
 
 const allLangs = ["Telugu", "Hindi", "English", "Tamil", "Kannada"];
@@ -64,20 +65,34 @@ const BookingPage = () => {
     setFilteredDoctors(doctors);
   };
 
+  // ✅ Appointment booking logic connected to backend
   const handleBooking = async () => {
     if (!selectedDoctor) return;
 
     try {
-      await axios.post("http://localhost:5000/api/bookings", {
-        doctorName: selectedDoctor.name,
-        specialization: selectedDoctor.specialization,
-        hospital: selectedDoctor.hospital,
+      const patientId = localStorage.getItem("userId");
+      const doctorId = selectedDoctor.backendId || "690cc78c9b3a288bba4c3b56"; // fallback to Sathwik’s ID
+      const date = "2025-11-10"; // You can make this dynamic later
+      const time = "09:30";
+
+      if (!patientId || !doctorId) {
+        return alert("Missing patient or doctor ID. Please login again.");
+      }
+
+      const res = await axios.post("http://localhost:5000/api/appointments/create", {
+        patientId,
+        doctorId,
+        date,
+        time,
+        symptoms: "N/A",
       });
-      alert("Appointment booked successfully!");
+
+      console.log("Appointment Response:", res.data);
+      alert("✅ Appointment booked successfully!");
       setIsModalOpen(false);
     } catch (error) {
-      console.error(error);
-      alert("Failed to book appointment.");
+      console.error("Booking error:", error);
+      alert("❌ Failed to book appointment.");
     }
   };
 
