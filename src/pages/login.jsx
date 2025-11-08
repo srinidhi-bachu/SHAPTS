@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import "./login.css";
 import axios from "axios";
-import { API_BASE_URL } from "../apiConfig";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,34 +18,46 @@ export default function Login() {
     }
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/login`, {
+      const response = await axios.post("http://localhost:5000/api/login", {
         email,
         password,
         role,
       });
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
-      localStorage.setItem("userName", res.data.name);
+      // ✅ Store important info
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("role", response.data.role);
+      localStorage.setItem("userName", response.data.name);
+      localStorage.setItem("userId", response.data._id || "");
 
-      alert(`Login successful as ${res.data.role}`);
+      // ✅ Store Doctor ID (used in doctor dashboard)
+      localStorage.setItem(
+        "doctorId",
+        response.data.user?._id || response.data._id || ""
+      );
 
-      if (res.data.role === "doctor") {
+      alert(response.data.message || `Login successful as ${response.data.role}`);
+
+      // ✅ Redirect based on role
+      if (response.data.role === "doctor") {
         window.location.href = "/doctor-dashboard";
-      } else if (res.data.role === "admin") {
+      } else if (response.data.role === "admin") {
         window.location.href = "/admin-dashboard";
       } else {
         window.location.href = "/patient-dashboard";
       }
-    } catch (err) {
-      console.error("Login Error:", err);
-      setError(err.response?.data?.message || "Invalid credentials!");
+    } catch (error) {
+      console.error("Login Error:", error);
+      setError(
+        error.response?.data?.message || "Invalid credentials or server error"
+      );
     }
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
+        {/* Left Side Animation */}
         <div className="illustration">
           <DotLottieReact
             src="/Doctor.lottie"
@@ -56,9 +67,12 @@ export default function Login() {
           />
         </div>
 
+        {/* Right Side Form */}
         <form className="login-form" onSubmit={handleLogin}>
           <h2>SHAPTS Login</h2>
-          <p className="subtitle">Smart Health Appointment Tracker</p>
+          <p className="subtitle">
+            Smart Health Appointment & Prescription Tracker
+          </p>
 
           <select value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="patient">Patient</option>

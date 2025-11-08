@@ -131,13 +131,17 @@ export default function BookingPage() {
     if (!selectedSlot) return alert("Pick a slot first");
 
     try {
-      const patientId = localStorage.getItem("userId") || "674a9fcd2b121a7f89e00123";
-      const doctorId = doctorModal.doctor.id || "674a9fcd2b121a7f89e00999";
+      const patientId = localStorage.getItem("userId");
+      const doctorName = doctorModal?.doctor?.name;
+      const doctorId = doctorModal?.doctor?.backendId || doctorModal?.doctor?.id; // Prefer real backend _id
       const [date, time] = selectedSlot.split(" ");
 
-      const res = await axios.post("http://localhost:5000/api/appointments", {
+      if (!patientId) return alert("Missing logged-in patient ID. Please re-login.");
+
+      const res = await axios.post("http://localhost:5000/api/appointments/create", {
         patientId,
         doctorId,
+        doctorName,
         date,
         time,
         symptoms: "N/A",
@@ -203,7 +207,7 @@ export default function BookingPage() {
           <div>
             <h3 className="h">Recommended doctors</h3>
             <div className="list">
-              {[{ id: "d1", name: "Dr. Priya Verma", spec: "Cardiologist", rating: 4.9 }, { id: "d3", name: "Dr. Arjun Rao", spec: "Dermatologist", rating: 4.8 }].map(
+              {[{ id: "sathwik1", backendId: "690cc78c9b3a288bba4c3b56", name: "Dr. Sathwik", spec: "General Physician", rating: 4.8 }, { id: "d1", name: "Dr. Priya Verma", spec: "Cardiologist", rating: 4.9 }, { id: "d3", name: "Dr. Arjun Rao", spec: "Dermatologist", rating: 4.8 }].map(
                 (d) => (
                   <div key={d.id} className="card">
                     <div className="docL">
