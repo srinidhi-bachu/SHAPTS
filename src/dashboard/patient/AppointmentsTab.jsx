@@ -49,6 +49,19 @@ export default function AppointmentsTab() {
     alert(`Booked ${doctorModal.doctor.name} on ${selectedSlot}`);
   };
 
+  // Ingest last booking made on BookingPage (includes optional note)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("pt:lastBooking");
+      if (!raw) return;
+      const b = JSON.parse(raw);
+      setAppointments((prev) => {
+        if (prev.some((x) => x.id === b.id)) return prev;
+        return [...prev, { id: b.id, doctor: b.doctor, date: b.date, time: b.time, status: b.status || "Booked", note: b.note || "" }];
+      });
+    } catch {}
+  }, []);
+
   // Mock data
   const locations = ["Mumbai", "Bengaluru", "Pune", "Delhi"];
   const hospitalsByCity = useMemo(() => ({
@@ -319,6 +332,7 @@ export default function AppointmentsTab() {
               <th>Doctor</th>
               <th>Date</th>
               <th>Time</th>
+              <th>Concern</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -329,6 +343,7 @@ export default function AppointmentsTab() {
                 <td>{a.doctor}</td>
                 <td>{a.date}</td>
                 <td>{a.time}</td>
+                <td>{a.note || '—'}</td>
                 <td><span className="badge">{a.status}</span></td>
                 <td className="actions">
                   <button onClick={() => alert(`Reschedule ${a.id}`)}>Reschedule</button>

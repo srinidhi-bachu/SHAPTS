@@ -210,16 +210,109 @@
 
 .tabContent { animation: fadeSlideLeft 260ms ease-out; }
 
+
+.formGrid { display: grid; grid-template-columns: repeat(12,1fr); gap: 12px; align-items: start; }
+.formGrid > * { min-width: 0; }
+
+/* Appointments: Live Queue */
+.queueCard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+}
+.queueHeader { font-weight: 700; letter-spacing: .2px; }
+.queueBody { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: center; }
+.queueStat { display: grid; gap: 4px; }
+.queueStat span { color: var(--muted); font-size: 12px; }
+.queueStat strong { font-size: 16px; }
+.queueActions { display: flex; justify-content: flex-end; }
+
+/* Appointments: Timeline */
+.timeline {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.timelineGroup {
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  background: var(--glass);
+  box-shadow: var(--shadow);
+}
+.timelineDate {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--stroke);
+  font-weight: 600;
+}
+.timelineItems { display: grid; grid-template-columns: 1fr; }
+.timelineItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--stroke);
+}
+.timelineItem:last-child { border-bottom: none; }
+.timelineMeta { display: flex; gap: 10px; align-items: baseline; }
+.timelineTime { font-weight: 700; min-width: 56px; }
+.timelinePatient { opacity: .9; }
+.timelineControls { display: flex; align-items: center; }
+
+.muted { color: var(--muted); font-size: 12px; }
+
+.quickBar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+
+/* Mini chart */
+.chart { width: 100%; height: 90px; display: block; }
+.sparkline { width: 100%; height: 40px; display: block; }
+
+/* Chat widget */
+.chatCard { background: var(--glass); border: 1px solid var(--stroke); border-radius: 12px; padding: 12px; box-shadow: var(--shadow); }
+.chatBody { max-height: 180px; overflow: auto; display: grid; gap: 8px; margin-bottom: 8px; }
+.chatMsg { background: rgba(110,231,249,0.14); border: 1px solid rgba(110,231,249,0.35); border-radius: 10px; padding: 8px 10px; }
+.chatInput { display: flex; gap: 8px; }
+.chatInput input { flex: 1; }
+
+/* Modal */
+.modalBackdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 50; }
+.modalCard { background: #fff; color: var(--text); width: min(560px, 92vw); border-radius: 14px; border: 1px solid var(--stroke); box-shadow: var(--shadow); padding: 14px; }
+.modalHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+
+.input, .select, .textarea {
+  width: 100%;
+  background: #ffffff; /* solid for clarity */
+  border: 1px solid #cbd5e1; /* slate-300 for visibility */
+
 .formGrid { display: grid; grid-template-columns: repeat(12,1fr); gap: 12px; }
 
 .input, .select, .textarea {
   width: 100%;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--stroke);
+
   color: var(--text);
   border-radius: 12px;
   padding: 10px 12px;
   outline: none;
+
+  box-sizing: border-box;
+}
+
+.input:hover, .select:hover, .textarea:hover {
+  border-color: #94a3b8; /* slate-400 */
+}
+
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+
 }
 
 .textarea { min-height: 90px; resize: vertical; }
@@ -280,4 +373,12 @@
   .col6 { grid-column: span 12; }
   .col4 { grid-column: span 12; }
   .col3 { grid-column: span 6; }
+
+  .queueBody { grid-template-columns: 1fr; }
+}
+
+/* Narrow screens: prevent overlap by stacking all fields */
+@media (max-width: 640px) {
+  .col6, .col4, .col3, .col2, .col12 { grid-column: span 12; }
+
 }
